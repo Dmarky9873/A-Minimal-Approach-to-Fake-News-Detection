@@ -1,3 +1,26 @@
+"""
+    Author: Daniel Markusson
+
+    Assets:
+    *    Rich_Terminal (Class):
+        -   Constants:
+                PAGE_BREAK (`str`): 50 '-' characters in a row with two newlines surrounding it.
+                
+        -   Methods:
+            #   print_ALERT --> None
+                    Summary:
+                        Prints `s` with the `ALERT` color in the __Colors class.
+                    Args:
+                        s (`str`): A string to be printed with the `ALERT` color.
+                        
+            #   print_WARN --> None
+                    Summary:
+                        Prints `s` with the `MINIMAL` color in the __Colors class.
+                    Args:
+                        s (`str`): A string to be printed with the `MINIMAL` color.
+"""
+
+
 class Rich_Terminal:
     PAGE_BREAK = "\n\n"
 
@@ -13,10 +36,21 @@ class Rich_Terminal:
 
     # The following functions automatically print the string 's' in the wanted color.
     def print_ALERT(self, s):
+        """Prints `s` with the `ALERT` color in the __Colors class.
+
+        Args:
+            s (`str`): A string to be printed with the `ALERT` color.
+        """
         s = self.__toString(s)
         print(self.__Colors.RED + s + self.__Colors.RESET)
 
     def print_MINIMAL(self, s):
+        """Prints `s` with the `MINIMAL` color in the __Colors class.
+
+        Args:
+            s (`str`): A string to be printed with the `MINIMAL` color.
+        """
+
         s = self.__toString(s)
         print(self.__Colors.MINIMAL + s + self.__Colors.RESET)
 
@@ -36,7 +70,8 @@ class Rich_Terminal:
         s = self.__toString(s)
         print(self.__Colors.MAJOR + s + self.__Colors.RESET)
 
-    # The following functions return the string 's' in the wanted color.
+    # The following functions return the string 's' in the wanted color (to print along side
+    # different colors within the same line).
     def getString_ALERT(self, s):
         s = self.__toString(s)
         return self.__Colors.RED + s + self.__Colors.RESET
