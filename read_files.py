@@ -9,10 +9,13 @@
 """
 
 import pandas as pd
+from prettytable import PrettyTable
+import numpy as np
+
 from rich_terminal import Rich_Terminal
 
 
-def getFakeReal(showinfo=True):
+def __getFakeReal(showinfo=True):
     """ Returns a dictionary where `getFakeReal()['fake']` has the content of the fake news articles 
         and `getFakeReal()['real']` has the content of the real news articles.
 
@@ -34,6 +37,7 @@ def getFakeReal(showinfo=True):
 
     realDFs = [buzzfeedDF_real, politifactDF_real]
     fakeDFs = [buzzfeedDF_fake, politifactDF_fake]
+    print(politifactDF_fake.id)
 
     data['real'] = pd.concat(realDFs)
     data['fake'] = pd.concat(fakeDFs)
@@ -50,15 +54,54 @@ def getFakeReal(showinfo=True):
         print(rt.PAGE_BREAK)
 
         print(rt.getString_MINIMAL(
-            "Successfully concatinated all fake dataframes together and successfully concatinated all real dataframes together.") + "\nDataframes:\n")
+            """Successfully concatinated all fake dataframes together and successfully 
+            concatinated all real dataframes together.""") + "\nDataframes:\n")
         print("Dataframe_real size: " + rt.getString_MAJOR(data['real'].size))
         print("Dataframe_fake size: " + rt.getString_MAJOR(data['fake'].size))
 
     return data
 
 
-if __name__ == '__main__':
-    data = getFakeReal(showinfo=True)
+def __getArticleId(name: str):
+    """Gets the id (row number) of `name` within the PolitiFact dataset or the BuzzFeed dataset, whichever it's in.
 
-    # print(data['real'].head())
-    # print(data['fake'].head())
+    Args:
+        `name` (`str`): The name of the article whos ID you are trying to find.
+
+    Returns:
+        `int`: The id of `name`.
+    """
+
+    # A list of the buzzfeed article's names (their 'IDs' within the dataframs)
+    buzzfeedNames = []
+    # Opens ID text file and iterates through each ID, adding it to the list.
+    with open('./raw/BuzzFeedNews.txt') as f:
+        for id in f:
+            # Appends the ID to the ID list and gets rid of the newline character
+            buzzfeedNames.append(id.replace('\n', ''))
+
+    # Repeats the above with the PolitiFact dataset.
+    politifactNames = []
+    with open('./raw/PolitiFactNews.txt') as f:
+        for id in f:
+            politifactNames.append(id.replace('\n', ''))
+
+    if name in buzzfeedNames:
+        return buzzfeedNames.index(name) + 1
+    else:
+        return politifactNames.index(name) + 1
+
+
+def getArticleStats(showinfo=True):
+    articles = __getFakeReal(showinfo)
+    for name in articles['fake']['id']:
+        print(name)
+
+
+if __name__ == '__main__':
+    # data = __getFakeReal(showinfo=False)
+
+    # print(data['fake'].id)
+
+    # print(__getArticleId('BuzzFeed_Real_8'))
+    print(getArticleStats(showinfo=False))
