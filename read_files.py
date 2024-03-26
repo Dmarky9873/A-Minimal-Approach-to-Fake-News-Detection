@@ -131,7 +131,19 @@ def __getOutletStats(path: str):
     return stats
 
 
-def __getArticleStats(verbose=False):
+def __getArticleCounts(verbose=False):
+    """Gets the counts of the articles (num shares and users who shared).
+
+    Args:
+        verbose (bool, optional): Set `True` for more information during method call. Defaults to 
+        False.
+
+    Returns:
+        `dict`: A dictionary with keys set as the unique article IDs. The keys correspond to another 
+        sub-dictionary whos keys are `shares` and `users-who-shared`. `shares` is an unsigned 
+        integer which is the number of times article `name` was shared. `users-who-shared` is a set 
+        with the usernames of the users who shared article `name`.
+    """
     articles = __getFakeReal(verbose)
     stats = dict()
     buzzfeedStats = __getOutletStats("./raw/BuzzFeedNewsUser.txt")
@@ -151,7 +163,8 @@ def __getArticleStats(verbose=False):
             "./raw/BuzzFeedNews.txt", int(stat[0])).replace('\n', '')
         try:
             stats[name]["shares"] += int(stat[2].replace('\n', ''))
-            stats[name]["users-who-shared"].add(stat[1])
+            stats[name]["users-who-shared"].add(
+                __getUsername(int(stat[1]), 'buzzfeed'))
         except KeyError:
             if verbose and name not in errorArticles:
                 rt = Rich_Terminal()
@@ -165,7 +178,8 @@ def __getArticleStats(verbose=False):
             "./raw/PolitiFactNews.txt", int(stat[0])).replace('\n', '')
         try:
             stats[name]["shares"] += int(stat[2])
-            stats[name]["users-who-shared"].add(stat[1])
+            stats[name]["users-who-shared"].add(
+                __getUsername(int(stat[1]), 'politifact'))
         except KeyError:
             if verbose:
                 rt = Rich_Terminal()
@@ -176,9 +190,28 @@ def __getArticleStats(verbose=False):
     return stats
 
 
+def __getUsername(ID: int, outlet: str):
+    """Gets the unique username of user `ID` based on their outlet, `outlet`.
+
+    Args:
+        ID (`int`): The ID of the user, retrieved from the news-user relationship file.
+        outlet (`str`): The outlet of user `ID`.
+
+    Returns:
+        `str`: The unique username of user `ID`.
+    """
+    if outlet == 'buzzfeed':
+        return linecache.getline("./raw/BuzzFeedUser.txt", ID).replace('\n', '')
+    return linecache.getline("./raw/PolitiFactUser.txt", ID).replace('\n', '')
+
+
 def __getUserStats(verbose=False):
     pass
 
 
+def main():
+    __getArticleCounts()
+
+
 if __name__ == '__main__':
-    __getArticleStats(True)
+    main()
