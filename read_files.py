@@ -21,7 +21,6 @@
 import json
 import pandas as pd
 from prettytable import PrettyTable
-import numpy as np
 import linecache
 
 from rich_terminal import Rich_Terminal
@@ -207,6 +206,11 @@ def __getUsername(ID: int, outlet: str):
 
 def __getUserStats(verbose=False):
     pass
+
+
+def __getArticleSummaryStatistics(verbose=False):
+    counts = __getArticleCounts(verbose)
+    stats = dict()
 
 
 def main():
