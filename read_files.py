@@ -2,20 +2,32 @@
     Author: Daniel Markusson
 
     Methods:
-    *    getDataFrames --> Dict()
+    *    __getFakeReal --> Dict()
             Summary:
-                Returns a dictionary where `getFakeReal()['fake']` has the content of the fake news 
-                articles and `getFakeReal()['real']` has the content of the real news articles.
+                Returns a dictionary where `__getFakeReal()['fake']` has the content of the fake 
+                news articles and `__getFakeReal()['real']` has the content of the real news 
+                articles.
+                
+    *   __getArticleName --> str()
+            Summary:
+                Gets the name of the article based on its `ID` and `outlet`.
+                    
+    *   __getOutletStats --> list()
+            Summary:
+                Helper function that interprets each line from the [outlet]NewsUser.txt file as a 
+                list with values: [News Article ID, User ID, Times Shared].
+                
 """
-
+import json
 import pandas as pd
 from prettytable import PrettyTable
 import numpy as np
+import linecache
 
 from rich_terminal import Rich_Terminal
 
 
-def __getFakeReal(showinfo=True):
+def __getFakeReal(verbose=False):
     """ Returns a dictionary where `getFakeReal()['fake']` has the content of the fake news articles 
         and `getFakeReal()['real']` has the content of the real news articles.
 
@@ -37,12 +49,26 @@ def __getFakeReal(showinfo=True):
 
     realDFs = [buzzfeedDF_real, politifactDF_real]
     fakeDFs = [buzzfeedDF_fake, politifactDF_fake]
-    print(politifactDF_fake.id)
+
+    for i in range(2):
+        for j, k in realDFs[i].iterrows():
+            old_id = k.id
+            num = int(old_id[old_id.index('_') + 1:old_id.index('-')]) + 1
+            outlet = "buzzfeed" if i == 0 else "politifact"
+            new_id = __getArticleName(num, outlet, False)
+            k.id = new_id
+
+        for j, k in fakeDFs[i].iterrows():
+            old_id = k.id
+            num = int(old_id[old_id.index('_') + 1:old_id.index('-')]) + 1
+            outlet = "buzzfeed" if i == 0 else "politifact"
+            new_id = __getArticleName(num, outlet, True)
+            k.id = new_id
 
     data['real'] = pd.concat(realDFs)
     data['fake'] = pd.concat(fakeDFs)
 
-    if showinfo:
+    if verbose:
         rt = Rich_Terminal()
 
         print(rt.getString_MINIMAL(
@@ -54,54 +80,105 @@ def __getFakeReal(showinfo=True):
         print(rt.PAGE_BREAK)
 
         print(rt.getString_MINIMAL(
-            """Successfully concatinated all fake dataframes together and successfully 
-            concatinated all real dataframes together.""") + "\nDataframes:\n")
+            """Successfully concatinated all dataframes.""") + "\nDataframes:\n")
         print("Dataframe_real size: " + rt.getString_MAJOR(data['real'].size))
         print("Dataframe_fake size: " + rt.getString_MAJOR(data['fake'].size))
+        print("\n\n")
 
     return data
 
 
-def __getArticleId(name: str):
-    """Gets the id (row number) of `name` within the PolitiFact dataset or the BuzzFeed dataset, whichever it's in.
+def __getArticleName(ID: int, outlet: str, isFake: bool):
+    """Gets the name of the article based on its `ID` and `outlet`.
 
     Args:
-        `name` (`str`): The name of the article whos ID you are trying to find.
+        ID (`int`): The ID of the article so that it can be found in the [outlet]News.txt file.
+        outlet (`str`): The outlet of the article. ALL LOWERCASE (`buzzfeed` or `politifact`).
 
     Returns:
-        `int`: The id of `name`.
+        `str`: Returns the name of the article.
     """
-
-    # A list of the buzzfeed article's names (their 'IDs' within the dataframs)
-    buzzfeedNames = []
-    # Opens ID text file and iterates through each ID, adding it to the list.
-    with open('./raw/BuzzFeedNews.txt') as f:
-        for id in f:
-            # Appends the ID to the ID list and gets rid of the newline character
-            buzzfeedNames.append(id.replace('\n', ''))
-
-    # Repeats the above with the PolitiFact dataset.
-    politifactNames = []
-    with open('./raw/PolitiFactNews.txt') as f:
-        for id in f:
-            politifactNames.append(id.replace('\n', ''))
-
-    if name in buzzfeedNames:
-        return buzzfeedNames.index(name) + 1
-    else:
-        return politifactNames.index(name) + 1
+    # Because IDs correspond to the line number in the [outlet]News.txt files, we can use linecache
+    # to quickly find the name within the file.
+    if outlet == "buzzfeed":
+        if isFake:
+            return linecache.getline("./raw/BuzzFeedNews.txt", ID - 1 + 91).replace('\n', '')
+        return linecache.getline("./raw/BuzzFeedNews.txt", ID - 1).replace('\n', '')
+    if isFake:
+        return linecache.getline("./raw/PolitiFactNews.txt", ID - 1 + 120).replace('\n', '')
+    return linecache.getline("./raw/PolitiFactNews.txt", ID - 1).replace('\n', '')
 
 
-def getArticleStats(showinfo=True):
-    articles = __getFakeReal(showinfo)
-    for name in articles['fake']['id']:
-        print(name)
+def __getOutletStats(path: str):
+    """Helper function that interprets each line from the [outlet]NewsUser.txt file as a list with 
+    values: [News Article ID, User ID, Times Shared].
+
+    Args:
+        path (`str`): The path to the [outlet]NewsUser.txt file.
+
+    Returns:
+        `list`: A two-dimensional array of each line in `path`. The subarrays have values [News 
+        Article ID, User ID, Times Shared].
+    """
+    # Array to hold the subarrays
+    stats = []
+    # Reads the file and appends a subarray to the `stats` array. The subarray has values stated
+    # in the method outline.
+    with open(path) as f:
+        for l in f:
+            stats.append(l.split('\t'))
+
+    return stats
+
+
+def __getArticleStats(verbose=False):
+    articles = __getFakeReal(verbose)
+    stats = dict()
+    buzzfeedStats = __getOutletStats("./raw/BuzzFeedNewsUser.txt")
+    politifactStats = __getOutletStats("./raw/PolitiFactNewsUser.txt")
+
+    errorArticles = set()
+
+    # Populating the dictionaries
+    for name in articles['fake'].id:
+        stats[name] = {"shares": 0, "users-who-shared": set()}
+
+    for name in articles['real'].id:
+        stats[name] = {"shares": 0, "users-who-shared": set()}
+
+    for stat in buzzfeedStats:
+        name = linecache.getline(
+            "./raw/BuzzFeedNews.txt", int(stat[0])).replace('\n', '')
+        try:
+            stats[name]["shares"] += int(stat[2].replace('\n', ''))
+            stats[name]["users-who-shared"].add(stat[1])
+        except KeyError:
+            if verbose and name not in errorArticles:
+                rt = Rich_Terminal()
+                rt.print_WARN(
+                    name + " found in News-User relationship but no matching article was found.")
+                rt.print_MINIMAL("Continuing...")
+            errorArticles.add(name)
+
+    for stat in politifactStats:
+        name = linecache.getline(
+            "./raw/PolitiFactNews.txt", int(stat[0])).replace('\n', '')
+        try:
+            stats[name]["shares"] += int(stat[2])
+            stats[name]["users-who-shared"].add(stat[1])
+        except KeyError:
+            if verbose:
+                rt = Rich_Terminal()
+                rt.print_WARN(
+                    name + " found in News-User relationship but no matching article was found.")
+                rt.print_MINIMAL("Continuing...")
+
+    return stats
+
+
+def __getUserStats(verbose=False):
+    pass
 
 
 if __name__ == '__main__':
-    # data = __getFakeReal(showinfo=False)
-
-    # print(data['fake'].id)
-
-    # print(__getArticleId('BuzzFeed_Real_8'))
-    print(getArticleStats(showinfo=False))
+    __getArticleStats(True)
