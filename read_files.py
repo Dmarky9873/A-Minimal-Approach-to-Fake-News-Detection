@@ -18,10 +18,13 @@
                 list with values: [News Article ID, User ID, Times Shared].
                 
 """
+
 import json
+import matplotlib
 import pandas as pd
 from prettytable import PrettyTable
 import linecache
+import math
 
 from rich_terminal import Rich_Terminal
 
@@ -204,17 +207,35 @@ def __getUsername(ID: int, outlet: str):
     return linecache.getline("./raw/PolitiFactUser.txt", ID).replace('\n', '')
 
 
-def __getUserStats(verbose=False):
+def __getUserCounts(verbose=False):
     pass
 
 
 def __getArticleSummaryStatistics(verbose=False):
     counts = __getArticleCounts(verbose)
-    stats = dict()
+    summaryStats = dict()
+
+    articles = counts.keys()
+    meanShares = 0
+    for article in articles:
+        meanShares += counts[article]['shares']
+    meanShares /= len(articles)
+
+    variance = 0
+    for article in articles:
+        variance += ((counts[article]['shares'] - meanShares)**2)/len(articles)
+
+    stDevShares = round(math.sqrt(variance), 3)
+
+    summaryStats["shares"] = {"mean": meanShares, "stdev": stDevShares}
+
+    print(summaryStats)
+
+    return summaryStats
 
 
 def main():
-    __getArticleCounts()
+    __getArticleSummaryStatistics()
 
 
 if __name__ == '__main__':
