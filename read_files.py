@@ -19,11 +19,12 @@
                 
 """
 
-import json
+import simplejson as json
 import pandas as pd
 # from prettytable import PrettyTable
 import linecache
 import statistics
+import os
 
 from rich_terminal import Rich_Terminal
 
@@ -499,9 +500,11 @@ def updateJson(verbose=False):
 
     data["users"] = __getUserCounts(verbose)
 
-    with open("./cleaned_data.json", 'w') as f:
+    with open("./temp.json", 'w') as f:
         json.dump(data, f)
-#
+
+    os.system("cat temp.json | python -m json.tool > cleaned_data.json")
+    os.system("rm temp.json")
 
 
 def main():
