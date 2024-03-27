@@ -137,6 +137,21 @@ def __getOutletStats(path: str):
 def __getArticleFromName(name: str):
     pass
 
+
+def __isArticleFake(name: str):
+    """Returns `True` if article `name` is fake, and `False` if it is true.
+
+    Args:
+        name (`str`): The unique name of an article.
+
+    Returns:
+        `bool`: Returns `True` if article `name` is fake, and `False` if it is true.
+    """
+    if "Fake" in name:
+        return True
+    return False
+
+
 # Article-User Relationship
 
 
@@ -228,6 +243,10 @@ def __getUserCounts(verbose=False):
              dictionary key.
              * `articles-shared`: Set of articles user shared when user is a unique username 
              dictionary key.
+             * `num-fake-shared`: An unsigned integer of the number of fake articles shared by user 
+             when user is a unique username dictionary key.
+             * `num-real-shared`: An unsigned integer of the number of real articles shared by user 
+             when user is a unique username dictionary key.
     """
 
     # Gets the set of all users within the dataset.
@@ -239,7 +258,7 @@ def __getUserCounts(verbose=False):
     # Populating the users dictionary with empty information to be filled in later.
     for user in users:
         counts[user] = {"followers": {"count": 0, "users": set()}, "following": {
-            "count": 0, "users": set()}, "articles": {"num-shared": 0, "articles-shared": set()}}
+            "count": 0, "users": set()}, "articles": {"num-shared": 0, "articles-shared": set(), "num-fake-shared": 0, "num-real-shared": 0}}
 
     # Gets all of the "a follows b" user-user relationships.
     a_follows_b = __getFollowRelationships()
@@ -266,6 +285,10 @@ def __getUserCounts(verbose=False):
         for user in usersWhoShared:
             counts[user]["articles"]["num-shared"] += 1
             counts[user]["articles"]["articles-shared"].add(article)
+            if __isArticleFake(article):
+                counts[user]["articles"]["num-fake-shared"] += 1
+            else:
+                counts[user]["articles"]["num-real-shared"] += 1
 
     return counts
 
@@ -286,6 +309,65 @@ def __getSharesList(verbose=False):
     for article in articles:
         sharesList.append(counts[article]['shares'])
     return sharesList
+
+
+def __getUserSummaryStatistics(verbose=False):
+    """Gets the summary statistics of the user counts.
+
+    Args:
+        verbose (bool, optional): Set `True` for more information during method call. Defaults to 
+        `False`.
+
+    Returns:
+        `dict`: Dictionary of summary statistics for counts.
+    """
+    userCounts = __getUserCounts(verbose)
+    users = userCounts.keys()
+    summaryStatistics = dict()
+
+    followersList = []
+    followingList = []
+    numArticlesSharedList = []
+    numFakeArticlesSharedList = []
+    numRealArticlesSharedList = []
+
+    for user in users:
+        followersList.append(userCounts[user]["followers"]["count"])
+        followingList.append(userCounts[user]["following"]["count"])
+
+        numArticlesSharedList.append(
+            userCounts[user]["articles"]["num-shared"])
+        numFakeArticlesSharedList.append(
+            userCounts[user]["articles"]["num-fake-shared"])
+        numRealArticlesSharedList.append(
+            userCounts[user]["articles"]["num-real-shared"])
+
+    summaryStatistics["followers"] = {"data": followersList, "mean": statistics.mean(
+        followersList), "stdev": statistics.pstdev(followersList), "median": statistics.median(followersList),
+        "q1": statistics.quantiles(followersList)[0], "q3": statistics.quantiles(followersList)[2],
+        "mode": statistics.mode(followersList)}
+
+    summaryStatistics["following"] = {"data": followingList, "mean": statistics.mean(
+        followingList), "stdev": statistics.pstdev(followingList), "median": statistics.median(followingList),
+        "q1": statistics.quantiles(followingList)[0], "q3": statistics.quantiles(followingList)[2],
+        "mode": statistics.mode(followingList)}
+
+    summaryStatistics["articles-shared"] = {"data": numArticlesSharedList, "mean": statistics.mean(
+        numArticlesSharedList), "stdev": statistics.pstdev(numArticlesSharedList), "median": statistics.median(numArticlesSharedList),
+        "q1": statistics.quantiles(numArticlesSharedList)[0], "q3": statistics.quantiles(numArticlesSharedList)[2],
+        "mode": statistics.mode(numArticlesSharedList)}
+
+    summaryStatistics["fake-articles-shared"] = {"data": numFakeArticlesSharedList, "mean": statistics.mean(
+        numFakeArticlesSharedList), "stdev": statistics.pstdev(numFakeArticlesSharedList), "median": statistics.median(numFakeArticlesSharedList),
+        "q1": statistics.quantiles(numFakeArticlesSharedList)[0], "q3": statistics.quantiles(numFakeArticlesSharedList)[2],
+        "mode": statistics.mode(numFakeArticlesSharedList)}
+
+    summaryStatistics["real-articles-shared"] = {"data": numRealArticlesSharedList, "mean": statistics.mean(
+        numRealArticlesSharedList), "stdev": statistics.pstdev(numRealArticlesSharedList), "median": statistics.median(numRealArticlesSharedList),
+        "q1": statistics.quantiles(numRealArticlesSharedList)[0], "q3": statistics.quantiles(numRealArticlesSharedList)[2],
+        "mode": statistics.mode(numRealArticlesSharedList)}
+
+    return summaryStatistics
 
 
 def __getArticleSummaryStatistics(verbose=False):
@@ -311,13 +393,8 @@ def __getArticleSummaryStatistics(verbose=False):
                               "q3": statistics.quantiles(sharesList)[2],
                               "mode": statistics.mode(sharesList)}
 
-    print(summaryStats)
-
     return summaryStats
 
-
-def __getUserSummaryStatistics(verbose=False):
-    pass
 
 # Users
 
@@ -392,7 +469,8 @@ def __getFollowRelationships():
 
 
 def main():
-    __getUserCounts()
+    x = __getUserSummaryStatistics()
+    print(x["real-articles-shared"]["mean"], x["fake-articles-shared"]["mean"])
 
 
 if __name__ == '__main__':
