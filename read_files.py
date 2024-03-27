@@ -134,6 +134,9 @@ def __getOutletStats(path: str):
     return stats
 
 
+def __getArticleFromName(name: str):
+    pass
+
 # Article-User Relationship
 
 
@@ -196,10 +199,41 @@ def __getArticleCounts(verbose=False):
     return stats
 
 
-# TODO: Finish the articles part of the users dictionary
 def __getUserCounts(verbose=False):
+    """Gets the counts of the users (number of followers, number of people following, followers, 
+    people following, number of shared articles, and articles shared).
+
+    Args:
+        verbose (`bool`, optional): Set `True` for more information during method call. Defaults to 
+        `False`.
+
+    Returns:
+        `dict`: A dictionary of dictionaries. The keys of `dict` are the unique usernames of each 
+        user within the dataset, which correspond to subdictionaries `followers`, `following`, and 
+        `articles`. `followers`, `following` and `articles` each are subdictionaries (keys of 
+        `dict`[some unique username]) corresponding to counts and sets of values, as elaborated 
+        here:
+         - `followers`:
+             * `count`: An unsigned integer corresponding to the number of people following user 
+             when user is a unique username dictionary key.
+             * `users`: Set of all people following user when user is a unique username dictionary 
+             key.
+         - `following`:
+             * `count`: An unsigned integer corresponding to the number of people user is following 
+             when user is a unique username dictionary key.
+             * `users`: Set of all users user is following when user is a unique username dictionary 
+             key.
+         - `articles`:
+             * `num-shared`: Number of unique articles user shared when user is a unique username 
+             dictionary key.
+             * `articles-shared`: Set of articles user shared when user is a unique username 
+             dictionary key.
+    """
+
+    # Gets the set of all users within the dataset.
     users = __getUsers()
 
+    # Creates a dictionary to store the user counts.
     counts = dict()
 
     # Populating the users dictionary with empty information to be filled in later.
@@ -207,14 +241,31 @@ def __getUserCounts(verbose=False):
         counts[user] = {"followers": {"count": 0, "users": set()}, "following": {
             "count": 0, "users": set()}, "articles": {"num-shared": 0, "articles-shared": set()}}
 
+    # Gets all of the "a follows b" user-user relationships.
     a_follows_b = __getFollowRelationships()
 
+    # Analyzes the `a_follows_b` set and increments/adds people to the required stored variables.
     for follower, receiving_follow in a_follows_b:
         counts[receiving_follow]["followers"]["count"] += 1
         counts[receiving_follow]["followers"]["users"].add(follower)
 
         counts[follower]["following"]["count"] += 1
         counts[follower]["following"]["users"].add(receiving_follow)
+
+    # Gets the counts of the articles (number of shares and set of users who shared).
+    articleCounts = __getArticleCounts(verbose)
+
+    # Gets set-like object of all the names of articles.
+    articles = articleCounts.keys()
+
+    # Analyzes `articleCounts`, modifying variables within `counts` based on what articles were
+    # shared by whom.
+    for article in articles:
+        usersWhoShared = articleCounts[article]["users-who-shared"]
+
+        for user in usersWhoShared:
+            counts[user]["articles"]["num-shared"] += 1
+            counts[user]["articles"]["articles-shared"].add(article)
 
     return counts
 
@@ -316,9 +367,7 @@ def __getFollowRelationships():
     with open("./raw/BuzzFeedUserUser.txt") as f:
         for l in f:
             l_ = l.replace('\n', '').split('\t')
-            a = int(l_[0])
-            b = int(l_[1])
-
+            a, b = int(l_[0]), int(l_[1])
             a, b = int(a), int(b)
 
             username_A = __getUsername(a, 'buzzfeed')
