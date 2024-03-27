@@ -45,10 +45,14 @@ def __getFakeReal(verbose=False):
     """
 
     data = dict()
-    buzzfeedDF_fake = pd.read_csv("./raw/BuzzFeed_fake_news_content.csv")
-    buzzfeedDF_real = pd.read_csv("./raw/BuzzFeed_real_news_content.csv")
-    politifactDF_fake = pd.read_csv("./raw/PolitiFact_fake_news_content.csv")
-    politifactDF_real = pd.read_csv("./raw/PolitiFact_real_news_content.csv")
+    buzzfeedDF_fake = pd.read_csv(
+        "./raw/BuzzFeed_fake_news_content.csv").fillna("None")
+    buzzfeedDF_real = pd.read_csv(
+        "./raw/BuzzFeed_real_news_content.csv").fillna("None")
+    politifactDF_fake = pd.read_csv(
+        "./raw/PolitiFact_fake_news_content.csv").fillna("None")
+    politifactDF_real = pd.read_csv(
+        "./raw/PolitiFact_real_news_content.csv").fillna("None")
 
     realDFs = [buzzfeedDF_real, politifactDF_real]
     fakeDFs = [buzzfeedDF_fake, politifactDF_fake]
@@ -211,12 +215,16 @@ def __getArticleCounts(verbose=False):
                     name + " found in News-User relationship but no matching article was found.")
                 rt.print_MINIMAL("Continuing...")
 
+    for article in stats.keys():
+        stats[article]["users-who-shared"] = list(
+            stats[article]["users-who-shared"])
+
     return stats
 
 
 def __getUserCounts(verbose=False):
     """Gets the counts of the users (number of followers, number of people following, followers, 
-    people following, number of shared articles, and articles shared).
+    people following, number of shared articles, and articles shared). VERY LARGE.
 
     Args:
         verbose (`bool`, optional): Set `True` for more information during method call. Defaults to 
@@ -289,6 +297,16 @@ def __getUserCounts(verbose=False):
                 counts[user]["articles"]["num-fake-shared"] += 1
             else:
                 counts[user]["articles"]["num-real-shared"] += 1
+
+    for user in users:
+        counts[user]["followers"]["users"] = list(
+            counts[user]["followers"]["users"])
+
+        counts[user]["following"]["users"] = list(
+            counts[user]["following"]["users"])
+
+        counts[user]["articles"]["articles-shared"] = list(
+            counts[user]["articles"]["articles-shared"])
 
     return counts
 
@@ -468,9 +486,26 @@ def __getFollowRelationships():
     return a_follows_b
 
 
+def updateJson(verbose=False):
+
+    data = dict()
+
+    data["articles"] = {"fake-articles": dict(), "real-articles": dict(),
+                        "counts": __getArticleCounts(verbose), "statistics": __getArticleSummaryStatistics(verbose)}
+
+    fakeRealArticles = __getFakeReal(verbose)
+    data["articles"]["fake-articles"] = fakeRealArticles["fake"].to_dict()
+    data["articles"]["real-articles"] = fakeRealArticles["real"].to_dict()
+
+    data["users"] = __getUserCounts(verbose)
+
+    with open("./cleaned_data.json", 'w') as f:
+        json.dump(data, f)
+#
+
+
 def main():
-    x = __getUserSummaryStatistics()
-    print(x["real-articles-shared"]["mean"], x["fake-articles-shared"]["mean"])
+    updateJson()
 
 
 if __name__ == '__main__':
