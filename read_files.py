@@ -20,13 +20,14 @@
 """
 
 import json
-import matplotlib
 import pandas as pd
-from prettytable import PrettyTable
+# from prettytable import PrettyTable
 import linecache
-import math
+import statistics
 
 from rich_terminal import Rich_Terminal
+
+# Articles
 
 
 def __getFakeReal(verbose=False):
@@ -133,6 +134,9 @@ def __getOutletStats(path: str):
     return stats
 
 
+# Article-User Relationship
+
+
 def __getArticleCounts(verbose=False):
     """Gets the counts of the articles (num shares and users who shared).
 
@@ -192,6 +196,62 @@ def __getArticleCounts(verbose=False):
     return stats
 
 
+def __getUserCounts(verbose=False):
+    pass
+
+
+def __getSharesList(verbose=False):
+    """Helper function to retrieve a list of the number of shares for each article.
+
+    Args:
+        verbose (bool, optional): Set `True` for more information during method call. Defaults to 
+        `False`.
+
+    Returns:
+        `list`: A list of the number of shares for each article within the dataset.
+    """
+    counts = __getArticleCounts(verbose)
+    articles = counts.keys()
+    sharesList = []
+    for article in articles:
+        sharesList.append(counts[article]['shares'])
+    return sharesList
+
+
+def __getArticleSummaryStatistics(verbose=False):
+    """Gets the summary statistics of the articles (number of shares).
+
+    Args:
+        verbose (`bool`, optional): Set `True` for more information during method call. Defaults to 
+        False.
+
+    Returns:
+        `dict`: A dictionary that has the summary statistics of `data` (number of shares for each 
+        article). Keys: `data`, `mean`, `median`, `mode`, `q1`, `q3`, and `stdev`.
+    """
+
+    sharesList = __getSharesList(verbose)
+
+    summaryStats = dict()
+
+    summaryStats["shares"] = {"data": sharesList, "mean": statistics.mean(sharesList),
+                              "median": statistics.median(sharesList),
+                              "stdev": statistics.pstdev(sharesList),
+                              "q1": statistics.quantiles(sharesList)[0],
+                              "q3": statistics.quantiles(sharesList)[2],
+                              "mode": statistics.mode(sharesList)}
+
+    print(summaryStats)
+
+    return summaryStats
+
+
+def __getUserSummaryStatistics(verbose=False):
+    pass
+
+# Users
+
+
 def __getUsername(ID: int, outlet: str):
     """Gets the unique username of user `ID` based on their outlet, `outlet`.
 
@@ -205,33 +265,6 @@ def __getUsername(ID: int, outlet: str):
     if outlet == 'buzzfeed':
         return linecache.getline("./raw/BuzzFeedUser.txt", ID).replace('\n', '')
     return linecache.getline("./raw/PolitiFactUser.txt", ID).replace('\n', '')
-
-
-def __getUserCounts(verbose=False):
-    pass
-
-
-def __getArticleSummaryStatistics(verbose=False):
-    counts = __getArticleCounts(verbose)
-    summaryStats = dict()
-
-    articles = counts.keys()
-    meanShares = 0
-    for article in articles:
-        meanShares += counts[article]['shares']
-    meanShares /= len(articles)
-
-    variance = 0
-    for article in articles:
-        variance += ((counts[article]['shares'] - meanShares)**2)/len(articles)
-
-    stDevShares = round(math.sqrt(variance), 3)
-
-    summaryStats["shares"] = {"mean": meanShares, "stdev": stDevShares}
-
-    print(summaryStats)
-
-    return summaryStats
 
 
 def main():
