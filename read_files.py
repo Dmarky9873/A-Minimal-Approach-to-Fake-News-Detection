@@ -196,8 +196,27 @@ def __getArticleCounts(verbose=False):
     return stats
 
 
+# TODO: Finish the articles part of the users dictionary
 def __getUserCounts(verbose=False):
-    pass
+    users = __getUsers()
+
+    counts = dict()
+
+    # Populating the users dictionary with empty information to be filled in later.
+    for user in users:
+        counts[user] = {"followers": {"count": 0, "users": set()}, "following": {
+            "count": 0, "users": set()}, "articles": {"num-shared": 0, "articles-shared": set()}}
+
+    a_follows_b = __getFollowRelationships()
+
+    for follower, receiving_follow in a_follows_b:
+        counts[receiving_follow]["followers"]["count"] += 1
+        counts[receiving_follow]["followers"]["users"].add(follower)
+
+        counts[follower]["following"]["count"] += 1
+        counts[follower]["following"]["users"].add(receiving_follow)
+
+    return counts
 
 
 def __getSharesList(verbose=False):
@@ -267,8 +286,64 @@ def __getUsername(ID: int, outlet: str):
     return linecache.getline("./raw/PolitiFactUser.txt", ID).replace('\n', '')
 
 
+def __getUsers():
+    """Gets set of all users in dataset.
+
+    Returns:
+        `set`: Set of all users in a dataset.
+    """
+
+    users = set()
+    with open("./raw/PolitiFactUser.txt") as f:
+        for l in f:
+            users.add(l.replace('\n', ''))
+
+    with open("./raw/BuzzFeedUser.txt") as f:
+        for l in f:
+            users.add(l.replace('\n', ''))
+
+    return users
+
+
+def __getFollowRelationships():
+    """Gets the follow relationships of each user. VERY LARGE.
+
+    Returns:
+        `set`: Set of "a-follows-b" tuples.
+    """
+    a_follows_b = set()
+
+    with open("./raw/BuzzFeedUserUser.txt") as f:
+        for l in f:
+            l_ = l.replace('\n', '').split('\t')
+            a = int(l_[0])
+            b = int(l_[1])
+
+            a, b = int(a), int(b)
+
+            username_A = __getUsername(a, 'buzzfeed')
+            username_B = __getUsername(b, 'buzzfeed')
+
+            a_follows_b.add((username_A, username_B))
+
+    with open("./raw/PolitiFactUserUser.txt") as f:
+        for l in f:
+            l_ = l.replace('\n', '').split('\t')
+            a = int(l_[0])
+            b = int(l_[1])
+
+            a, b = int(a), int(b)
+
+            username_A = __getUsername(a, 'politifact')
+            username_B = __getUsername(b, 'politifact')
+
+            a_follows_b.add((username_A, username_B))
+
+    return a_follows_b
+
+
 def main():
-    __getArticleSummaryStatistics()
+    __getUserCounts()
 
 
 if __name__ == '__main__':
