@@ -106,7 +106,7 @@ class Rich_Terminal:
         MINIMAL = "\033[38;5;242m"
 
 
-if __name__ == '__main__':
+def main():
     rt = Rich_Terminal()
 
     print("This is regular text\n")
@@ -119,3 +119,7 @@ if __name__ == '__main__':
 
     print('\nu' + rt.getString_MINIMAL('k') + rt.getString_ALERT('u') + rt.getString_WARN('l') +
           rt.getString_SUCCESS('e') + rt.getString_INFO('l') + rt.getString_MAJOR('e'))
+
+
+if __name__ == '__main__':
+    main()
