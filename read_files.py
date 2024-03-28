@@ -24,7 +24,8 @@ import pandas as pd
 # from prettytable import PrettyTable
 import linecache
 import statistics
-import os
+import time
+import cProfile
 
 from rich_terminal import Rich_Terminal
 
@@ -498,13 +499,11 @@ def updateJson(verbose=False):
     data["articles"]["fake-articles"] = fakeRealArticles["fake"].to_dict()
     data["articles"]["real-articles"] = fakeRealArticles["real"].to_dict()
 
-    data["users"] = __getUserCounts(verbose)
+    data["users"] = {"counts": __getUserCounts(
+        verbose), "statistics": __getUserSummaryStatistics(verbose)}
 
-    with open("./temp.json", 'w') as f:
+    with open("./cleaned_data.json", 'w') as f:
         json.dump(data, f)
-
-    os.system("cat temp.json | python -m json.tool > cleaned_data.json")
-    os.system("rm temp.json")
 
 
 def main():
