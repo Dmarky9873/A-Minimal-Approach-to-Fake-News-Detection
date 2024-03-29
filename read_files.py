@@ -21,11 +21,8 @@
 
 import simplejson as json
 import pandas as pd
-# from prettytable import PrettyTable
 import linecache
 import statistics
-import time
-import cProfile
 
 from rich_terminal import Rich_Terminal
 
