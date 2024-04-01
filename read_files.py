@@ -137,10 +137,6 @@ def getOutletStats(path: str):
     return stats
 
 
-def getArticleFromName(name: str):
-    pass
-
-
 def isArticleFake(name: str):
     """Returns `True` if article `name` is fake, and `False` if it is true.
 
@@ -504,7 +500,7 @@ def updateJson(verbose=False):
 
 
 def main():
-    updateJson()
+    updateJson(False)
 
 
 if __name__ == '__main__':
