@@ -26,7 +26,7 @@ class RichTerminal:
     """
     page_break = "\n\n"
 
-    colors = {
+    __colors = {
         "RED": '\033[91m',
         "GREEN":  '\033[92m',
         "YELLOW": '\033[93m',
@@ -54,7 +54,7 @@ class RichTerminal:
             s (`str`): A string to be printed with the `ALERT` color.
         """
         s = self.__to_string(s)
-        print(self.colors["RED"] + s + self.colors["RESET"])
+        print(self.__colors["RED"] + s + self.__colors["RESET"])
 
     def print_minimal(self, s):
         """Prints `s` with the `MINIMAL` color in the __colors class.
@@ -64,7 +64,7 @@ class RichTerminal:
         """
 
         s = self.__to_string(s)
-        print(self.colors["MINIMAL"] + s + self.colors["RESET"])
+        print(self.__colors["MINIMAL"] + s + self.__colors["RESET"])
 
     def print_warn(self, s):
         """Prints `s` with the `WARN` color in the __colors class.
@@ -73,7 +73,7 @@ class RichTerminal:
             s (`str`): A string to be printed with the `MINIMAL` color.
         """
         s = self.__to_string(s)
-        print(self.colors["YELLOW"] + s + self.colors["RESET"])
+        print(self.__colors["YELLOW"] + s + self.__colors["RESET"])
 
     def print_success(self, s):
         """Prints `s` with the `SUCCESS` color in the __colors class.
@@ -82,7 +82,7 @@ class RichTerminal:
             s (`str`): A string to be printed with the `MINIMAL` color.
         """
         s = self.__to_string(s)
-        print(self.colors["GREEN"] + s + self.colors["RESET"])
+        print(self.__colors["GREEN"] + s + self.__colors["RESET"])
 
     def print_info(self, s):
         """Prints `s` with the `INFO` color in the __colors class.
@@ -91,7 +91,7 @@ class RichTerminal:
             s (`str`): A string to be printed with the `MINIMAL` color.
         """
         s = self.__to_string(s)
-        print(self.colors["BLUE"] + s + self.colors["RESET"])
+        print(self.__colors["BLUE"] + s + self.__colors["RESET"])
 
     def print_major(self, s):
         """Prints `s` with the `MAJOR` color in the __colors class.
@@ -100,7 +100,7 @@ class RichTerminal:
             s (`str`): A string to be printed with the `MINIMAL` color.
         """
         s = self.__to_string(s)
-        print(self.colors["MAJOR"] + s + self.colors["RESET"])
+        print(self.__colors["MAJOR"] + s + self.__colors["RESET"])
 
     # The following functions return the string 's' in the wanted color (to print along side
     # different colors["within"] the same line).
@@ -111,7 +111,7 @@ class RichTerminal:
             s (`str`): A string to be printed with the `MINIMAL` color.
         """
         s = self.__to_string(s)
-        return self.colors["RED"] + s + self.colors["RESET"]
+        return self.__colors["RED"] + s + self.__colors["RESET"]
 
     def get_string_minimal(self, s):
         """Returns a string `s` with the `MINIMAL` color in the __colors class.
@@ -120,7 +120,7 @@ class RichTerminal:
             s (`str`): A string to be printed with the `MINIMAL` color.
         """
         s = self.__to_string(s)
-        return self.colors["MINIMAL"] + s + self.colors["RESET"]
+        return self.__colors["MINIMAL"] + s + self.__colors["RESET"]
 
     def get_string_warn(self, s):
         """Returns a string `s` with the `WARN` color in the __colors class.
@@ -129,7 +129,7 @@ class RichTerminal:
             s (`str`): A string to be printed with the `MINIMAL` color.
         """
         s = self.__to_string(s)
-        return self.colors["YELLOW"] + s + self.colors["RESET"]
+        return self.__colors["YELLOW"] + s + self.__colors["RESET"]
 
     def get_string_success(self, s):
         """Returns a string `s` with the `SUCCESS` color in the __colors class.
@@ -138,7 +138,7 @@ class RichTerminal:
             s (`str`): A string to be printed with the `MINIMAL` color.
         """
         s = self.__to_string(s)
-        return self.colors["GREEN"] + s + self.colors["RESET"]
+        return self.__colors["GREEN"] + s + self.__colors["RESET"]
 
     def get_string_info(self, s):
         """Returns a string `s` with the `MINIMAL` color in the __colors class.
@@ -147,7 +147,7 @@ class RichTerminal:
             s (`str`): A string to be printed with the `MINIMAL` color.
         """
         s = self.__to_string(s)
-        return self.colors["BLUE"] + s + self.colors["RESET"]
+        return self.__colors["BLUE"] + s + self.__colors["RESET"]
 
     def get_string_major(self, s):
         """Returns a string `s` with the `MINIMAL` color in the __colors class.
@@ -156,7 +156,7 @@ class RichTerminal:
             s (`str`): A string to be printed with the `MINIMAL` color.
         """
         s = self.__to_string(s)
-        return self.colors["MAJOR"] + s + self.colors["RESET"]
+        return self.__colors["MAJOR"] + s + self.__colors["RESET"]
 
 
 def main():
