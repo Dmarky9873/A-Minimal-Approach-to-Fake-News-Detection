@@ -1,12 +1,16 @@
-import matplotlib.pyplot as plt
-import networkx as nx
-import json
+"""_summary_
+"""
 
-with open("./cleaned_data.json") as f:
+import json
+import networkx as nx
+import matplotlib.pyplot as plt
+
+with open("./cleaned_data.json", encoding="UTF-8") as f:
     DATABASE = json.load(f)
 
 
-def createFollowersNetworkGraph():
+def create_network_graph_followers():
+    # TODO: Docstring
     graph = nx.Graph()
     graph.add_node(1)
     graph.add_node(2)
@@ -17,7 +21,9 @@ def createFollowersNetworkGraph():
 
 
 def main():
-    createFollowersNetworkGraph()
+    """Main function; to be ran whenever the file is ran.
+    """
+    create_network_graph_followers()
 
 
 if __name__ == "__main__":

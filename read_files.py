@@ -2,39 +2,39 @@
     Author: Daniel Markusson
 
     Methods:
-    *    getFakeReal --> Dict()
+    *    get_fake_real --> Dict()
             Summary:
-                Returns a dictionary where `getFakeReal()['fake']` has the content of the fake 
-                news articles and `getFakeReal()['real']` has the content of the real news 
+                Returns a dictionary where `get_fake_real()['fake']` has the content of the fake 
+                news articles and `get_fake_real()['real']` has the content of the real news 
                 articles.
                 
-    *   getArticleName --> str()
+    *   get_article_name --> str()
             Summary:
                 Gets the name of the article based on its `ID` and `outlet`.
                     
-    *   getOutletStats --> list()
+    *   get_outlet_stats --> list()
             Summary:
                 Helper function that interprets each line from the [outlet]NewsUser.txt file as a 
                 list with values: [News Article ID, User ID, Times Shared].
                 
 """
 
+import statistics
+import linecache
 import simplejson as json
 import pandas as pd
-import linecache
-import statistics
 
 from rich_terminal import Rich_Terminal
 
 # Articles
 
 
-def getFakeReal(verbose=False):
-    """ Returns a dictionary where `getFakeReal()['fake']` has the content of the fake news articles 
-        and `getFakeReal()['real']` has the content of the real news articles.
+def get_fake_real(verbose=False):
+    """ Returns a dictionary where `get_fake_real()['fake']` has the content of the fake news 
+        articles and `get_fake_real()['real']` has the content of the real news articles.
 
     Args:
-        `showinfo` (bool, optional): If true, getFakeReal() will print information regarding the 
+        `showinfo` (bool, optional): If true, get_fake_real() will print information regarding the 
         files it reads. If false, it doesn't. Defaults to True.
 
     Returns:
@@ -43,46 +43,54 @@ def getFakeReal(verbose=False):
         real news articles within the dataset.
     """
 
+    # Creates a dictionary to store the data.
     data = dict()
-    buzzfeedDF_fake = pd.read_csv(
+
+    # Reads the CSV files, filters the "NaN" characters, and stores them in temporary variables.
+    buzzfeed_dataframe_fake = pd.read_csv(
         "./raw/BuzzFeed_fake_news_content.csv").fillna("None")
-    buzzfeedDF_real = pd.read_csv(
+    buzzfeed_dataframe_real = pd.read_csv(
         "./raw/BuzzFeed_real_news_content.csv").fillna("None")
-    politifactDF_fake = pd.read_csv(
+    politifact_dataframe_fake = pd.read_csv(
         "./raw/PolitiFact_fake_news_content.csv").fillna("None")
-    politifactDF_real = pd.read_csv(
+    politifact_dataframe_real = pd.read_csv(
         "./raw/PolitiFact_real_news_content.csv").fillna("None")
 
-    realDFs = [buzzfeedDF_real, politifactDF_real]
-    fakeDFs = [buzzfeedDF_fake, politifactDF_fake]
+    #
+    real_dataframes = [buzzfeed_dataframe_real, politifact_dataframe_real]
+    fake_dataframes = [buzzfeed_dataframe_fake, politifact_dataframe_fake]
 
     for i in range(2):
-        for j, k in realDFs[i].iterrows():
+        for _, k in real_dataframes[i].iterrows():
             old_id = k.id
             num = int(old_id[old_id.index('_') + 1:old_id.index('-')]) + 1
             outlet = "buzzfeed" if i == 0 else "politifact"
-            new_id = getArticleName(num, outlet, False)
+            new_id = get_article_name(num, outlet, False)
             k.id = new_id
 
-        for j, k in fakeDFs[i].iterrows():
+        for _, k in fake_dataframes[i].iterrows():
             old_id = k.id
             num = int(old_id[old_id.index('_') + 1:old_id.index('-')]) + 1
             outlet = "buzzfeed" if i == 0 else "politifact"
-            new_id = getArticleName(num, outlet, True)
+            new_id = get_article_name(num, outlet, True)
             k.id = new_id
 
-    data['real'] = pd.concat(realDFs)
-    data['fake'] = pd.concat(fakeDFs)
+    data['real'] = pd.concat(real_dataframes)
+    data['fake'] = pd.concat(fake_dataframes)
 
     if verbose:
         rt = Rich_Terminal()
 
         print(rt.getString_MINIMAL(
             "Successfully retrieved all fake and real dataframes.") + " \nDataframes:\n")
-        print("BuzzFeed_real size:", rt.getString_MAJOR(buzzfeedDF_real.size))
-        print("BuzzFeed_fake size:", rt.getString_MAJOR(buzzfeedDF_fake.size))
-        print("PolitiFact_real size:", rt.getString_MAJOR(politifactDF_real.size))
-        print("PolitiFact_fake size:", rt.getString_MAJOR(politifactDF_fake.size))
+        print("BuzzFeed_real size:", rt.getString_MAJOR(
+            buzzfeed_dataframe_real.size))
+        print("BuzzFeed_fake size:", rt.getString_MAJOR(
+            buzzfeed_dataframe_fake.size))
+        print("PolitiFact_real size:", rt.getString_MAJOR(
+            politifact_dataframe_real.size))
+        print("PolitiFact_fake size:", rt.getString_MAJOR(
+            politifact_dataframe_fake.size))
         print(rt.PAGE_BREAK)
 
         print(rt.getString_MINIMAL(
@@ -94,7 +102,7 @@ def getFakeReal(verbose=False):
     return data
 
 
-def getArticleName(ID: int, outlet: str, isFake: bool):
+def get_article_name(id_num: int, outlet: str, is_fake: bool):
     """Gets the name of the article based on its `ID` and `outlet`.
 
     Args:
@@ -107,15 +115,15 @@ def getArticleName(ID: int, outlet: str, isFake: bool):
     # Because IDs correspond to the line number in the [outlet]News.txt files, we can use linecache
     # to quickly find the name within the file.
     if outlet == "buzzfeed":
-        if isFake:
-            return linecache.getline("./raw/BuzzFeedNews.txt", ID - 1 + 91).replace('\n', '')
-        return linecache.getline("./raw/BuzzFeedNews.txt", ID - 1).replace('\n', '')
-    if isFake:
-        return linecache.getline("./raw/PolitiFactNews.txt", ID - 1 + 120).replace('\n', '')
-    return linecache.getline("./raw/PolitiFactNews.txt", ID - 1).replace('\n', '')
+        if is_fake:
+            return linecache.getline("./raw/BuzzFeedNews.txt", id_num - 1 + 91).replace('\n', '')
+        return linecache.getline("./raw/BuzzFeedNews.txt", id_num - 1).replace('\n', '')
+    if is_fake:
+        return linecache.getline("./raw/PolitiFactNews.txt", id_num - 1 + 120).replace('\n', '')
+    return linecache.getline("./raw/PolitiFactNews.txt", id_num - 1).replace('\n', '')
 
 
-def getOutletStats(path: str):
+def get_outlet_stats(path: str):
     """Helper function that interprets each line from the [outlet]NewsUser.txt file as a list with 
     values: [News Article ID, User ID, Times Shared].
 
@@ -130,14 +138,14 @@ def getOutletStats(path: str):
     stats = []
     # Reads the file and appends a subarray to the `stats` array. The subarray has values stated
     # in the method outline.
-    with open(path) as f:
+    with open(path, encoding="UTF-8") as f:
         for l in f:
             stats.append(l.split('\t'))
 
     return stats
 
 
-def isArticleFake(name: str):
+def is_article_fake(name: str):
     """Returns `True` if article `name` is fake, and `False` if it is true.
 
     Args:
@@ -154,7 +162,7 @@ def isArticleFake(name: str):
 # Article-User Relationship
 
 
-def getArticleCounts(verbose=False):
+def get_article_counts(verbose=False):
     """Gets the counts of the articles (num shares and users who shared).
 
     Args:
@@ -167,12 +175,12 @@ def getArticleCounts(verbose=False):
         integer which is the number of times article `name` was shared. `users-who-shared` is a set 
         with the usernames of the users who shared article `name`.
     """
-    articles = getFakeReal(verbose)
+    articles = get_fake_real(verbose)
     stats = dict()
-    buzzfeedStats = getOutletStats("./raw/BuzzFeedNewsUser.txt")
-    politifactStats = getOutletStats("./raw/PolitiFactNewsUser.txt")
+    buzzfeed_stats = get_outlet_stats("./raw/BuzzFeedNewsUser.txt")
+    politifact_stats = get_outlet_stats("./raw/PolitiFactNewsUser.txt")
 
-    errorArticles = set()
+    error_articles = set()
 
     # Populating the dictionaries
     for name in articles['fake'].id:
@@ -181,28 +189,28 @@ def getArticleCounts(verbose=False):
     for name in articles['real'].id:
         stats[name] = {"shares": 0, "users-who-shared": set()}
 
-    for stat in buzzfeedStats:
+    for stat in buzzfeed_stats:
         name = linecache.getline(
             "./raw/BuzzFeedNews.txt", int(stat[0])).replace('\n', '')
         try:
             stats[name]["shares"] += int(stat[2].replace('\n', ''))
             stats[name]["users-who-shared"].add(
-                getUsername(int(stat[1]), 'buzzfeed'))
+                get_username(int(stat[1]), 'buzzfeed'))
         except KeyError:
-            if verbose and name not in errorArticles:
+            if verbose and name not in error_articles:
                 rt = Rich_Terminal()
                 rt.print_WARN(
                     name + " found in News-User relationship but no matching article was found.")
                 rt.print_MINIMAL("Continuing...")
-            errorArticles.add(name)
+            error_articles.add(name)
 
-    for stat in politifactStats:
+    for stat in politifact_stats:
         name = linecache.getline(
             "./raw/PolitiFactNews.txt", int(stat[0])).replace('\n', '')
         try:
             stats[name]["shares"] += int(stat[2])
             stats[name]["users-who-shared"].add(
-                getUsername(int(stat[1]), 'politifact'))
+                get_username(int(stat[1]), 'politifact'))
         except KeyError:
             if verbose:
                 rt = Rich_Terminal()
@@ -210,14 +218,13 @@ def getArticleCounts(verbose=False):
                     name + " found in News-User relationship but no matching article was found.")
                 rt.print_MINIMAL("Continuing...")
 
-    for article in stats.keys():
-        stats[article]["users-who-shared"] = list(
-            stats[article]["users-who-shared"])
+    for _, values in stats.items():
+        values["users-who-shared"] = list(values["users-who-shared"])
 
     return stats
 
 
-def getUserCounts(verbose=False):
+def get_user_counts(verbose=False):
     """Gets the counts of the users (number of followers, number of people following, followers, 
     people following, number of shared articles, and articles shared). VERY LARGE.
 
@@ -253,18 +260,24 @@ def getUserCounts(verbose=False):
     """
 
     # Gets the set of all users within the dataset.
-    users = getUsers()
+    users = get_users()
 
     # Creates a dictionary to store the user counts.
     counts = dict()
 
     # Populating the users dictionary with empty information to be filled in later.
     for user in users:
-        counts[user] = {"followers": {"count": 0, "users": set()}, "following": {
-            "count": 0, "users": set()}, "articles": {"num-shared": 0, "articles-shared": set(), "num-fake-shared": 0, "num-real-shared": 0}}
+        counts[user] = {"followers": {"count": 0, "users": set()},
+                        "following": {"count": 0, "users": set()},
+                        "articles": {
+                            "num-shared": 0,
+                            "articles-shared": set(),
+                            "num-fake-shared": 0,
+                            "num-real-shared": 0
+        }}
 
     # Gets all of the "a follows b" user-user relationships.
-    a_follows_b = getFollowRelationships()
+    a_follows_b = get_follow_relationships()
 
     # Analyzes the `a_follows_b` set and increments/adds people to the required stored variables.
     for follower, receiving_follow in a_follows_b:
@@ -275,20 +288,20 @@ def getUserCounts(verbose=False):
         counts[follower]["following"]["users"].add(receiving_follow)
 
     # Gets the counts of the articles (number of shares and set of users who shared).
-    articleCounts = getArticleCounts(verbose)
+    article_counts = get_article_counts(verbose)
 
     # Gets set-like object of all the names of articles.
-    articles = articleCounts.keys()
+    articles = article_counts.keys()
 
     # Analyzes `articleCounts`, modifying variables within `counts` based on what articles were
     # shared by whom.
     for article in articles:
-        usersWhoShared = articleCounts[article]["users-who-shared"]
+        users_who_shared = article_counts[article]["users-who-shared"]
 
-        for user in usersWhoShared:
+        for user in users_who_shared:
             counts[user]["articles"]["num-shared"] += 1
             counts[user]["articles"]["articles-shared"].add(article)
-            if isArticleFake(article):
+            if is_article_fake(article):
                 counts[user]["articles"]["num-fake-shared"] += 1
             else:
                 counts[user]["articles"]["num-real-shared"] += 1
@@ -306,7 +319,7 @@ def getUserCounts(verbose=False):
     return counts
 
 
-def getSharesList(verbose=False):
+def get_shares_list(verbose=False):
     """Helper function to retrieve a list of the number of shares for each article.
 
     Args:
@@ -316,15 +329,15 @@ def getSharesList(verbose=False):
     Returns:
         `list`: A list of the number of shares for each article within the dataset.
     """
-    counts = getArticleCounts(verbose)
+    counts = get_article_counts(verbose)
     articles = counts.keys()
-    sharesList = []
+    shares_list = []
     for article in articles:
-        sharesList.append(counts[article]['shares'])
-    return sharesList
+        shares_list.append(counts[article]['shares'])
+    return shares_list
 
 
-def getUserSummaryStatistics(verbose=False):
+def get_user_summary_statistics(verbose=False):
     """Gets the summary statistics of the user counts.
 
     Args:
@@ -334,56 +347,80 @@ def getUserSummaryStatistics(verbose=False):
     Returns:
         `dict`: Dictionary of summary statistics for counts.
     """
-    userCounts = getUserCounts(verbose)
-    users = userCounts.keys()
-    summaryStatistics = dict()
+    user_counts = get_user_counts(verbose)
+    users = user_counts.keys()
+    summary_statistics = dict()
 
-    followersList = []
-    followingList = []
-    numArticlesSharedList = []
-    numFakeArticlesSharedList = []
-    numRealArticlesSharedList = []
+    followers_list = []
+    following_list = []
+    num_articles_shared_list = []
+    num_fake_articles_shared_list = []
+    num_real_articles_shared_list = []
 
     for user in users:
-        followersList.append(userCounts[user]["followers"]["count"])
-        followingList.append(userCounts[user]["following"]["count"])
+        followers_list.append(user_counts[user]["followers"]["count"])
+        following_list.append(user_counts[user]["following"]["count"])
 
-        numArticlesSharedList.append(
-            userCounts[user]["articles"]["num-shared"])
-        numFakeArticlesSharedList.append(
-            userCounts[user]["articles"]["num-fake-shared"])
-        numRealArticlesSharedList.append(
-            userCounts[user]["articles"]["num-real-shared"])
+        num_articles_shared_list.append(
+            user_counts[user]["articles"]["num-shared"])
+        num_fake_articles_shared_list.append(
+            user_counts[user]["articles"]["num-fake-shared"])
+        num_real_articles_shared_list.append(
+            user_counts[user]["articles"]["num-real-shared"])
 
-    summaryStatistics["followers"] = {"data": followersList, "mean": statistics.mean(
-        followersList), "stdev": statistics.pstdev(followersList), "median": statistics.median(followersList),
-        "q1": statistics.quantiles(followersList)[0], "q3": statistics.quantiles(followersList)[2],
-        "mode": statistics.mode(followersList)}
+    summary_statistics["followers"] = {
+        "data": followers_list, "mean": statistics.mean(
+            followers_list), "stdev": statistics.pstdev(followers_list),
+        "median": statistics.median(followers_list),
+        "q1": statistics.quantiles(followers_list)[0],
+        "q3": statistics.quantiles(followers_list)[2],
+        "mode": statistics.mode(followers_list)
+    }
 
-    summaryStatistics["following"] = {"data": followingList, "mean": statistics.mean(
-        followingList), "stdev": statistics.pstdev(followingList), "median": statistics.median(followingList),
-        "q1": statistics.quantiles(followingList)[0], "q3": statistics.quantiles(followingList)[2],
-        "mode": statistics.mode(followingList)}
+    summary_statistics["following"] = {
+        "data": following_list, "mean": statistics.mean(
+            following_list), "stdev": statistics.pstdev(following_list),
+        "median": statistics.median(following_list),
+        "q1": statistics.quantiles(following_list)[0],
+        "q3": statistics.quantiles(following_list)[2],
+        "mode": statistics.mode(following_list)
+    }
 
-    summaryStatistics["articles-shared"] = {"data": numArticlesSharedList, "mean": statistics.mean(
-        numArticlesSharedList), "stdev": statistics.pstdev(numArticlesSharedList), "median": statistics.median(numArticlesSharedList),
-        "q1": statistics.quantiles(numArticlesSharedList)[0], "q3": statistics.quantiles(numArticlesSharedList)[2],
-        "mode": statistics.mode(numArticlesSharedList)}
+    summary_statistics["articles-shared"] = {
+        "data": num_articles_shared_list,
+        "mean": statistics.mean(
+            num_articles_shared_list), "stdev": statistics.pstdev(num_articles_shared_list),
+        "median": statistics.median(num_articles_shared_list),
+        "q1": statistics.quantiles(num_articles_shared_list)[0],
+        "q3": statistics.quantiles(num_articles_shared_list)[2],
+        "mode": statistics.mode(num_articles_shared_list)
+    }
 
-    summaryStatistics["fake-articles-shared"] = {"data": numFakeArticlesSharedList, "mean": statistics.mean(
-        numFakeArticlesSharedList), "stdev": statistics.pstdev(numFakeArticlesSharedList), "median": statistics.median(numFakeArticlesSharedList),
-        "q1": statistics.quantiles(numFakeArticlesSharedList)[0], "q3": statistics.quantiles(numFakeArticlesSharedList)[2],
-        "mode": statistics.mode(numFakeArticlesSharedList)}
+    summary_statistics["fake-articles-shared"] = {
+        "data": num_fake_articles_shared_list,
+        "mean": statistics.mean(
+            num_fake_articles_shared_list),
+        "stdev": statistics.pstdev(num_fake_articles_shared_list),
+        "median": statistics.median(num_fake_articles_shared_list),
+        "q1": statistics.quantiles(num_fake_articles_shared_list)[0],
+        "q3": statistics.quantiles(num_fake_articles_shared_list)[2],
+        "mode": statistics.mode(num_fake_articles_shared_list)
+    }
 
-    summaryStatistics["real-articles-shared"] = {"data": numRealArticlesSharedList, "mean": statistics.mean(
-        numRealArticlesSharedList), "stdev": statistics.pstdev(numRealArticlesSharedList), "median": statistics.median(numRealArticlesSharedList),
-        "q1": statistics.quantiles(numRealArticlesSharedList)[0], "q3": statistics.quantiles(numRealArticlesSharedList)[2],
-        "mode": statistics.mode(numRealArticlesSharedList)}
+    summary_statistics["real-articles-shared"] = {
+        "data": num_real_articles_shared_list,
+        "mean": statistics.mean(
+            num_real_articles_shared_list),
+        "stdev": statistics.pstdev(num_real_articles_shared_list),
+        "median": statistics.median(num_real_articles_shared_list),
+        "q1": statistics.quantiles(num_real_articles_shared_list)[0],
+        "q3": statistics.quantiles(num_real_articles_shared_list)[2],
+        "mode": statistics.mode(num_real_articles_shared_list)}
 
-    return summaryStatistics
+    return summary_statistics
 
 
-def getArticleSummaryStatistics(verbose=False):
+def get_articles_summary_statistics(verbose=False):
     """Gets the summary statistics of the articles (number of shares).
 
     Args:
@@ -395,24 +432,26 @@ def getArticleSummaryStatistics(verbose=False):
         article). Keys: `data`, `mean`, `median`, `mode`, `q1`, `q3`, and `stdev`.
     """
 
-    sharesList = getSharesList(verbose)
+    shares_list = get_shares_list(verbose)
 
-    summaryStats = dict()
+    summary_statistics = dict()
 
-    summaryStats["shares"] = {"data": sharesList, "mean": statistics.mean(sharesList),
-                              "median": statistics.median(sharesList),
-                              "stdev": statistics.pstdev(sharesList),
-                              "q1": statistics.quantiles(sharesList)[0],
-                              "q3": statistics.quantiles(sharesList)[2],
-                              "mode": statistics.mode(sharesList)}
+    summary_statistics["shares"] = {
+        "data": shares_list, "mean": statistics.mean(shares_list),
+        "median": statistics.median(shares_list),
+        "stdev": statistics.pstdev(shares_list),
+        "q1": statistics.quantiles(shares_list)[0],
+        "q3": statistics.quantiles(shares_list)[2],
+        "mode": statistics.mode(shares_list)
+    }
 
-    return summaryStats
+    return summary_statistics
 
 
 # Users
 
 
-def getUsername(ID: int, outlet: str):
+def get_username(id_num: int, outlet: str):
     """Gets the unique username of user `ID` based on their outlet, `outlet`.
 
     Args:
@@ -423,11 +462,11 @@ def getUsername(ID: int, outlet: str):
         `str`: The unique username of user `ID`.
     """
     if outlet == 'buzzfeed':
-        return linecache.getline("./raw/BuzzFeedUser.txt", ID).replace('\n', '')
-    return linecache.getline("./raw/PolitiFactUser.txt", ID).replace('\n', '')
+        return linecache.getline("./raw/BuzzFeedUser.txt", id_num).replace('\n', '')
+    return linecache.getline("./raw/PolitiFactUser.txt", id_num).replace('\n', '')
 
 
-def getUsers():
+def get_users():
     """Gets set of all users in dataset.
 
     Returns:
@@ -435,18 +474,18 @@ def getUsers():
     """
 
     users = set()
-    with open("./raw/PolitiFactUser.txt") as f:
+    with open("./raw/PolitiFactUser.txt", encoding="UTF-8") as f:
         for l in f:
             users.add(l.replace('\n', ''))
 
-    with open("./raw/BuzzFeedUser.txt") as f:
+    with open("./raw/BuzzFeedUser.txt", encoding="UTF-8") as f:
         for l in f:
             users.add(l.replace('\n', ''))
 
     return users
 
 
-def getFollowRelationships():
+def get_follow_relationships():
     """Gets the follow relationships of each user. VERY LARGE.
 
     Returns:
@@ -454,18 +493,18 @@ def getFollowRelationships():
     """
     a_follows_b = set()
 
-    with open("./raw/BuzzFeedUserUser.txt") as f:
+    with open("./raw/BuzzFeedUserUser.txt", encoding="UTF-8") as f:
         for l in f:
             l_ = l.replace('\n', '').split('\t')
             a, b = int(l_[0]), int(l_[1])
             a, b = int(a), int(b)
 
-            username_A = getUsername(a, 'buzzfeed')
-            username_B = getUsername(b, 'buzzfeed')
+            username_a = get_username(a, 'buzzfeed')
+            username_b = get_username(b, 'buzzfeed')
 
-            a_follows_b.add((username_A, username_B))
+            a_follows_b.add((username_a, username_b))
 
-    with open("./raw/PolitiFactUserUser.txt") as f:
+    with open("./raw/PolitiFactUserUser.txt", encoding="UTF-8") as f:
         for l in f:
             l_ = l.replace('\n', '').split('\t')
             a = int(l_[0])
@@ -473,34 +512,45 @@ def getFollowRelationships():
 
             a, b = int(a), int(b)
 
-            username_A = getUsername(a, 'politifact')
-            username_B = getUsername(b, 'politifact')
+            username_a = get_username(a, 'politifact')
+            username_b = get_username(b, 'politifact')
 
-            a_follows_b.add((username_A, username_B))
+            a_follows_b.add((username_a, username_b))
 
     return a_follows_b
 
 
-def updateJson(verbose=False):
+def update_json(verbose=False):
+    """Updates the JSON "database" with the information from the raw files.
+
+    Args:
+        verbose (bool, optional): Set `True` for more information during method call. Defaults to 
+        False.
+    """
 
     data = dict()
 
-    data["articles"] = {"fake-articles": dict(), "real-articles": dict(),
-                        "counts": getArticleCounts(verbose), "statistics": getArticleSummaryStatistics(verbose)}
+    data["articles"] = {
+        "fake-articles": dict(), "real-articles": dict(),
+        "counts": get_article_counts(verbose),
+        "statistics": get_articles_summary_statistics(verbose)
+    }
 
-    fakeRealArticles = getFakeReal(verbose)
-    data["articles"]["fake-articles"] = fakeRealArticles["fake"].to_dict()
-    data["articles"]["real-articles"] = fakeRealArticles["real"].to_dict()
+    fake_and_real_articles = get_fake_real(verbose)
+    data["articles"]["fake-articles"] = fake_and_real_articles["fake"].to_dict()
+    data["articles"]["real-articles"] = fake_and_real_articles["real"].to_dict()
 
-    data["users"] = {"counts": getUserCounts(
-        verbose), "statistics": getUserSummaryStatistics(verbose)}
+    data["users"] = {"counts": get_user_counts(
+        verbose), "statistics": get_user_summary_statistics(verbose)}
 
-    with open("./cleaned_data.json", 'w') as f:
+    with open("./cleaned_data.json", 'w', encoding="UTF-8") as f:
         json.dump(data, f)
 
 
 def main():
-    updateJson(False)
+    """Main method to be run if this file is ran.
+    """
+    update_json(False)
 
 
 if __name__ == '__main__':
