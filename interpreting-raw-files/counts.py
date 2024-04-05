@@ -10,7 +10,7 @@ import linecache
 from articles import get_articles_dataframe, is_article_fake
 from article_user_relationship import user_article_shares
 from users import get_username, get_users, get_follow_relationships
-from rich_terminal import RichTerminal
+from rt.rich_terminal import RichTerminal
 
 
 def get_article_counts(verbose=False):
@@ -168,3 +168,21 @@ def get_user_counts(verbose=False):
             counts[user]["articles"]["articles-shared"])
 
     return counts
+
+
+def get_shares_list(verbose=False):
+    """Helper function to retrieve a list of the number of shares for each article.
+
+    Args:
+        verbose (bool, optional): Set `True` for more information during method call. Defaults to 
+        `False`.
+
+    Returns:
+        `list`: A list of the number of shares for each article within the dataset.
+    """
+    counts = get_article_counts(verbose)
+    articles = counts.keys()
+    shares_list = []
+    for article in articles:
+        shares_list.append(counts[article]['shares'])
+    return shares_list

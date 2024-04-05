@@ -8,7 +8,7 @@
 
 import linecache
 import pandas as pd
-from rich_terminal import RichTerminal
+from rt.rich_terminal import RichTerminal
 
 
 def get_articles_dataframe(verbose=False):
@@ -30,13 +30,13 @@ def get_articles_dataframe(verbose=False):
 
     # Reads the CSV files, filters the "NaN" characters, and stores them in temporary variables.
     buzzfeed_dataframe_fake = pd.read_csv(
-        "./raw/BuzzFeed_fake_news_content.csv").fillna("None")
+        "../raw-files/BuzzFeed_fake_news_content.csv").fillna("None")
     buzzfeed_dataframe_real = pd.read_csv(
-        "./raw/BuzzFeed_real_news_content.csv").fillna("None")
+        "../raw-files/BuzzFeed_real_news_content.csv").fillna("None")
     politifact_dataframe_fake = pd.read_csv(
-        "./raw/PolitiFact_fake_news_content.csv").fillna("None")
+        "../raw-files/PolitiFact_fake_news_content.csv").fillna("None")
     politifact_dataframe_real = pd.read_csv(
-        "./raw/PolitiFact_real_news_content.csv").fillna("None")
+        "../raw-files/PolitiFact_real_news_content.csv").fillna("None")
 
     #
     real_dataframes = [buzzfeed_dataframe_real, politifact_dataframe_real]

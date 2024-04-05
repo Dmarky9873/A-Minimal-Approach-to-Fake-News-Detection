@@ -5,7 +5,6 @@
 
 
 """
-from counts import get_article_counts
 
 
 def user_article_shares(path: str):
@@ -28,21 +27,3 @@ def user_article_shares(path: str):
             stats.append(l.split('\t'))
 
     return stats
-
-
-def get_shares_list(verbose=False):
-    """Helper function to retrieve a list of the number of shares for each article.
-
-    Args:
-        verbose (bool, optional): Set `True` for more information during method call. Defaults to 
-        `False`.
-
-    Returns:
-        `list`: A list of the number of shares for each article within the dataset.
-    """
-    counts = get_article_counts(verbose)
-    articles = counts.keys()
-    shares_list = []
-    for article in articles:
-        shares_list.append(counts[article]['shares'])
-    return shares_list

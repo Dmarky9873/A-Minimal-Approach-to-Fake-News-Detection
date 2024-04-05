@@ -6,7 +6,7 @@
 """
 import statistics
 from counts import get_user_counts
-from article_user_relationship import get_shares_list
+from counts import get_shares_list
 
 
 def get_user_summary_statistics(verbose=False):
