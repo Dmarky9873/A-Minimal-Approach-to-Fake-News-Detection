@@ -9,116 +9,171 @@
         -   Methods:
             #   print_ALERT --> None
                     Summary:
-                        Prints `s` with the `ALERT` color in the __Colors class.
+                        Prints `s` with the `ALERT` color in the __colors class.
                     Args:
                         s (`str`): A string to be printed with the `ALERT` color.
                         
             #   print_WARN --> None
                     Summary:
-                        Prints `s` with the `MINIMAL` color in the __Colors class.
+                        Prints `s` with the `MINIMAL` color in the __colors class.
                     Args:
                         s (`str`): A string to be printed with the `MINIMAL` color.
 """
 
 
-class Rich_Terminal:
-    PAGE_BREAK = "\n\n"
+class RichTerminal:
+    """Class to house all of the Rich_Terminal functions.
+    """
+    page_break = "\n\n"
+
+    colors = {
+        "RED": '\033[91m',
+        "GREEN":  '\033[92m',
+        "YELLOW": '\033[93m',
+        "BLUE": '\033[94m',
+        "MAJOR": '\033[97m',
+        "RESET": '\033[0m',
+        "MINIMAL": "\033[38;5;242m"
+    }
 
     def __init__(self):
-        for i in range(50):
-            self.PAGE_BREAK += '-'
-        self.PAGE_BREAK += '\n\n'
+        for _ in range(50):
+            self.page_break += '-'
+        self.page_break += '\n\n'
 
-    def __toString(self, s):
-        if type(s) != str:
+    def __to_string(self, s):
+        if isinstance(s, str):
             s = str(s)
         return s
 
     # The following functions automatically print the string 's' in the wanted color.
-    def print_ALERT(self, s):
-        """Prints `s` with the `ALERT` color in the __Colors class.
+    def print_alert(self, s):
+        """Prints `s` with the `ALERT` color in the __colors class.
 
         Args:
             s (`str`): A string to be printed with the `ALERT` color.
         """
-        s = self.__toString(s)
-        print(self.__Colors.RED + s + self.__Colors.RESET)
+        s = self.__to_string(s)
+        print(self.colors["RED"] + s + self.colors["RESET"])
 
-    def print_MINIMAL(self, s):
-        """Prints `s` with the `MINIMAL` color in the __Colors class.
+    def print_minimal(self, s):
+        """Prints `s` with the `MINIMAL` color in the __colors class.
 
         Args:
             s (`str`): A string to be printed with the `MINIMAL` color.
         """
 
-        s = self.__toString(s)
-        print(self.__Colors.MINIMAL + s + self.__Colors.RESET)
+        s = self.__to_string(s)
+        print(self.colors["MINIMAL"] + s + self.colors["RESET"])
 
-    def print_WARN(self, s):
-        s = self.__toString(s)
-        print(self.__Colors.YELLOW + s + self.__Colors.RESET)
+    def print_warn(self, s):
+        """Prints `s` with the `WARN` color in the __colors class.
 
-    def print_SUCCESS(self, s):
-        s = self.__toString(s)
-        print(self.__Colors.GREEN + s + self.__Colors.RESET)
+        Args:
+            s (`str`): A string to be printed with the `MINIMAL` color.
+        """
+        s = self.__to_string(s)
+        print(self.colors["YELLOW"] + s + self.colors["RESET"])
 
-    def print_INFO(self, s):
-        s = self.__toString(s)
-        print(self.__Colors.BLUE + s + self.__Colors.RESET)
+    def print_success(self, s):
+        """Prints `s` with the `SUCCESS` color in the __colors class.
 
-    def print_MAJOR(self, s):
-        s = self.__toString(s)
-        print(self.__Colors.MAJOR + s + self.__Colors.RESET)
+        Args:
+            s (`str`): A string to be printed with the `MINIMAL` color.
+        """
+        s = self.__to_string(s)
+        print(self.colors["GREEN"] + s + self.colors["RESET"])
+
+    def print_info(self, s):
+        """Prints `s` with the `INFO` color in the __colors class.
+
+        Args:
+            s (`str`): A string to be printed with the `MINIMAL` color.
+        """
+        s = self.__to_string(s)
+        print(self.colors["BLUE"] + s + self.colors["RESET"])
+
+    def print_major(self, s):
+        """Prints `s` with the `MAJOR` color in the __colors class.
+
+        Args:
+            s (`str`): A string to be printed with the `MINIMAL` color.
+        """
+        s = self.__to_string(s)
+        print(self.colors["MAJOR"] + s + self.colors["RESET"])
 
     # The following functions return the string 's' in the wanted color (to print along side
-    # different colors within the same line).
-    def getString_ALERT(self, s):
-        s = self.__toString(s)
-        return self.__Colors.RED + s + self.__Colors.RESET
+    # different colors["within"] the same line).
+    def get_string_alert(self, s):
+        """Returns a string `s` with the `ALERT` color in the __colors class.
 
-    def getString_MINIMAL(self, s):
-        s = self.__toString(s)
-        return self.__Colors.MINIMAL + s + self.__Colors.RESET
+        Args:
+            s (`str`): A string to be printed with the `MINIMAL` color.
+        """
+        s = self.__to_string(s)
+        return self.colors["RED"] + s + self.colors["RESET"]
 
-    def getString_WARN(self, s):
-        s = self.__toString(s)
-        return self.__Colors.YELLOW + s + self.__Colors.RESET
+    def get_string_minimal(self, s):
+        """Returns a string `s` with the `MINIMAL` color in the __colors class.
 
-    def getString_SUCCESS(self, s):
-        s = self.__toString(s)
-        return self.__Colors.GREEN + s + self.__Colors.RESET
+        Args:
+            s (`str`): A string to be printed with the `MINIMAL` color.
+        """
+        s = self.__to_string(s)
+        return self.colors["MINIMAL"] + s + self.colors["RESET"]
 
-    def getString_INFO(self, s):
-        s = self.__toString(s)
-        return self.__Colors.BLUE + s + self.__Colors.RESET
+    def get_string_warn(self, s):
+        """Returns a string `s` with the `WARN` color in the __colors class.
 
-    def getString_MAJOR(self, s):
-        s = self.__toString(s)
-        return self.__Colors.MAJOR + s + self.__Colors.RESET
+        Args:
+            s (`str`): A string to be printed with the `MINIMAL` color.
+        """
+        s = self.__to_string(s)
+        return self.colors["YELLOW"] + s + self.colors["RESET"]
 
-    class __Colors:
-        RED = '\033[91m'
-        GREEN = '\033[92m'
-        YELLOW = '\033[93m'
-        BLUE = '\033[94m'
-        MAJOR = '\033[97m'
-        RESET = '\033[0m'
-        MINIMAL = "\033[38;5;242m"
+    def get_string_success(self, s):
+        """Returns a string `s` with the `SUCCESS` color in the __colors class.
+
+        Args:
+            s (`str`): A string to be printed with the `MINIMAL` color.
+        """
+        s = self.__to_string(s)
+        return self.colors["GREEN"] + s + self.colors["RESET"]
+
+    def get_string_info(self, s):
+        """Returns a string `s` with the `MINIMAL` color in the __colors class.
+
+        Args:
+            s (`str`): A string to be printed with the `MINIMAL` color.
+        """
+        s = self.__to_string(s)
+        return self.colors["BLUE"] + s + self.colors["RESET"]
+
+    def get_string_major(self, s):
+        """Returns a string `s` with the `MINIMAL` color in the __colors class.
+
+        Args:
+            s (`str`): A string to be printed with the `MINIMAL` color.
+        """
+        s = self.__to_string(s)
+        return self.colors["MAJOR"] + s + self.colors["RESET"]
 
 
 def main():
-    rt = Rich_Terminal()
+    """Main function to be ran when the file is ran.
+    """
+    rt = RichTerminal()
 
     print("This is regular text\n")
-    rt.print_MINIMAL("This is minimal text")
-    rt.print_ALERT("This is alert text")
-    rt.print_WARN("This is warn text")
-    rt.print_SUCCESS("This is success text")
-    rt.print_INFO("This is info text")
-    rt.print_MAJOR("This is major text")
+    rt.print_minimal("This is minimal text")
+    rt.print_alert("This is alert text")
+    rt.print_warn("This is warn text")
+    rt.print_success("This is success text")
+    rt.print_info("This is info text")
+    rt.print_major("This is major text")
 
-    print('\nu' + rt.getString_MINIMAL('k') + rt.getString_ALERT('u') + rt.getString_WARN('l') +
-          rt.getString_SUCCESS('e') + rt.getString_INFO('l') + rt.getString_MAJOR('e'))
+    print('\nu' + rt.get_string_minimal('k') + rt.get_string_alert('u') + rt.get_string_warn('l') +
+          rt.get_string_success('e') + rt.get_string_info('l') + rt.get_string_major('e'))
 
 
 if __name__ == '__main__':

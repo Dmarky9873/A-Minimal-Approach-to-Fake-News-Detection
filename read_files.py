@@ -24,7 +24,7 @@ import linecache
 import simplejson as json
 import pandas as pd
 
-from rich_terminal import Rich_Terminal
+from rich_terminal import RichTerminal
 
 # Articles
 
@@ -79,24 +79,24 @@ def get_fake_real(verbose=False):
     data['fake'] = pd.concat(fake_dataframes)
 
     if verbose:
-        rt = Rich_Terminal()
+        rt = RichTerminal()
 
-        print(rt.getString_MINIMAL(
+        print(rt.get_string_minimal(
             "Successfully retrieved all fake and real dataframes.") + " \nDataframes:\n")
-        print("BuzzFeed_real size:", rt.getString_MAJOR(
+        print("BuzzFeed_real size:", rt.get_string_major(
             buzzfeed_dataframe_real.size))
-        print("BuzzFeed_fake size:", rt.getString_MAJOR(
+        print("BuzzFeed_fake size:", rt.get_string_major(
             buzzfeed_dataframe_fake.size))
-        print("PolitiFact_real size:", rt.getString_MAJOR(
+        print("PolitiFact_real size:", rt.get_string_major(
             politifact_dataframe_real.size))
-        print("PolitiFact_fake size:", rt.getString_MAJOR(
+        print("PolitiFact_fake size:", rt.get_string_major(
             politifact_dataframe_fake.size))
-        print(rt.PAGE_BREAK)
+        print(rt.page_break)
 
-        print(rt.getString_MINIMAL(
+        print(rt.get_string_minimal(
             """Successfully concatinated all dataframes.""") + "\nDataframes:\n")
-        print("Dataframe_real size: " + rt.getString_MAJOR(data['real'].size))
-        print("Dataframe_fake size: " + rt.getString_MAJOR(data['fake'].size))
+        print("Dataframe_real size: " + rt.get_string_major(data['real'].size))
+        print("Dataframe_fake size: " + rt.get_string_major(data['fake'].size))
         print("\n\n")
 
     return data
@@ -198,10 +198,10 @@ def get_article_counts(verbose=False):
                 get_username(int(stat[1]), 'buzzfeed'))
         except KeyError:
             if verbose and name not in error_articles:
-                rt = Rich_Terminal()
-                rt.print_WARN(
+                rt = RichTerminal()
+                rt.print_warn(
                     name + " found in News-User relationship but no matching article was found.")
-                rt.print_MINIMAL("Continuing...")
+                rt.print_minimal("Continuing...")
             error_articles.add(name)
 
     for stat in politifact_stats:
@@ -213,10 +213,10 @@ def get_article_counts(verbose=False):
                 get_username(int(stat[1]), 'politifact'))
         except KeyError:
             if verbose:
-                rt = Rich_Terminal()
-                rt.print_WARN(
+                rt = RichTerminal()
+                rt.print_warn(
                     name + " found in News-User relationship but no matching article was found.")
-                rt.print_MINIMAL("Continuing...")
+                rt.print_minimal("Continuing...")
 
     for _, values in stats.items():
         values["users-who-shared"] = list(values["users-who-shared"])
