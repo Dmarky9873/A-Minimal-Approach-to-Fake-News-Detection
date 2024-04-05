@@ -1,38 +1,80 @@
 """
-    
+
 
     Author: Daniel Markusson
-    
-    
+
+
 """
 
+import os
 import linecache
 import pandas as pd
 from rt.rich_terminal import RichTerminal
 
 
+def get_raw_files_directory():
+    """ Retrieves the directory of the raw files to be interpreted by the `get_articles_dataframe`
+        function.
+
+    Returns:
+        `str`: The path that leads to the directory of the raw files.
+    """
+    rt = RichTerminal()
+
+    # The set to house all of the directories in the current working directory
+    directories = set()
+
+    # Goes through all of the directories in the current working directory and checks if "raw-files"
+    # is there.
+    for _, dirs, _ in os.walk(os.getcwd(), topdown=True):
+        for name in dirs:
+            directories.add(name)
+
+    # If raw files isn't at the current working directory, we move up one directory and check there.
+    c = 0
+    while "raw-files" not in directories:
+        os.chdir('..')
+        for _, dirs, _ in os.walk(".", topdown=True):
+            for name in dirs:
+                directories.add(name)
+        c += 1
+
+        if c == 4:
+            rt.print_alert(
+                "Searched up 5 directories and did not find the 'raw-files' directory. \nAre you \
+                sure it is there? Please check the name of the directory."
+            )
+
+    # Once we have
+    raw_files_path = os.path.join(os.getcwd(), "raw-files")
+
+    return raw_files_path
+
+
 def get_articles_dataframe(verbose=False):
-    """ Returns a dictionary where `get_fake_real()['fake']` has the content of the fake news 
+    """ Returns a dictionary where `get_fake_real()['fake']` has the content of the fake news
         articles and `get_fake_real()['real']` has the content of the real news articles.
 
     Args:
-        `showinfo` (bool, optional): If true, get_fake_real() will print information regarding the 
+        `showinfo` (bool, optional): If true, get_fake_real() will print information regarding the
         files it reads. If false, it doesn't. Defaults to True.
 
     Returns:
-        `dict()`: A dictionary who's key `['fake']` is a pandas dataframe of the various fake news 
-        articles within the dataset, and who's key `['real']` is a pandas dataframe of the various 
+        `dict()`: A dictionary who's key `['fake']` is a pandas dataframe of the various fake news
+        articles within the dataset, and who's key `['real']` is a pandas dataframe of the various
         real news articles within the dataset.
     """
 
     # Creates a dictionary to store the data.
     data = dict()
 
+    raw_files_path = get_raw_files_directory()
+
     # Reads the CSV files, filters the "NaN" characters, and stores them in temporary variables.
     buzzfeed_dataframe_fake = pd.read_csv(
-        "../raw-files/BuzzFeed_fake_news_content.csv").fillna("None")
+        os.path.join(raw_files_path, "BuzzFeed_fake_news_content.csv")).fillna("None")
     buzzfeed_dataframe_real = pd.read_csv(
-        "../raw-files/BuzzFeed_real_news_content.csv").fillna("None")
+        os.path.join(raw_files_path, "BuzzFeed_real_news_content.csv")).fillna("None")
     politifact_dataframe_fake = pd.read_csv(
         "../raw-files/PolitiFact_fake_news_content.csv").fillna("None")
     politifact_dataframe_real = pd.read_csv(
