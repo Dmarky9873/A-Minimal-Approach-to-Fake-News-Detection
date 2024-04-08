@@ -7,6 +7,7 @@
 """
 
 import linecache
+from file_retrieval import get_file_directory
 
 
 def get_username(id_num: int, outlet: str):
@@ -20,8 +21,8 @@ def get_username(id_num: int, outlet: str):
         `str`: The unique username of user `ID`.
     """
     if outlet == 'buzzfeed':
-        return linecache.getline("./raw/BuzzFeedUser.txt", id_num).replace('\n', '')
-    return linecache.getline("./raw/PolitiFactUser.txt", id_num).replace('\n', '')
+        return linecache.getline(get_file_directory("BuzzFeedUser.txt"), id_num).replace('\n', '')
+    return linecache.getline(get_file_directory("PolitiFactUser.txt"), id_num).replace('\n', '')
 
 
 def get_users():
@@ -32,11 +33,11 @@ def get_users():
     """
 
     users = set()
-    with open("./raw/PolitiFactUser.txt", encoding="UTF-8") as f:
+    with open(get_file_directory("PolitiFactUser.txt"), encoding="UTF-8") as f:
         for l in f:
             users.add(l.replace('\n', ''))
 
-    with open("./raw/BuzzFeedUser.txt", encoding="UTF-8") as f:
+    with open(get_file_directory("BuzzFeedUser.txt"), encoding="UTF-8") as f:
         for l in f:
             users.add(l.replace('\n', ''))
 
@@ -51,7 +52,7 @@ def get_follow_relationships():
     """
     a_follows_b = set()
 
-    with open("./raw/BuzzFeedUserUser.txt", encoding="UTF-8") as f:
+    with open(get_file_directory("BuzzFeedUserUser.txt"), encoding="UTF-8") as f:
         for l in f:
             l_ = l.replace('\n', '').split('\t')
             a, b = int(l_[0]), int(l_[1])
@@ -62,7 +63,7 @@ def get_follow_relationships():
 
             a_follows_b.add((username_a, username_b))
 
-    with open("./raw/PolitiFactUserUser.txt", encoding="UTF-8") as f:
+    with open(get_file_directory("PolitiFactUserUser.txt"), encoding="UTF-8") as f:
         for l in f:
             l_ = l.replace('\n', '').split('\t')
             a = int(l_[0])

@@ -34,7 +34,7 @@ def update_json(verbose=False):
     data["users"] = {"counts": get_user_counts(
         verbose), "statistics": get_user_summary_statistics(verbose)}
 
-    with open("../z.json", 'w', encoding="UTF-8") as f:
+    with open("./z.json", 'w', encoding="UTF-8") as f:
         json.dump(data, f)
 
 

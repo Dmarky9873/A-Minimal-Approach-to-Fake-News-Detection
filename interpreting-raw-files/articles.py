@@ -6,49 +6,10 @@
 
 """
 
-import os
 import linecache
 import pandas as pd
+from file_retrieval import get_file_directory
 from rt.rich_terminal import RichTerminal
-
-
-def get_raw_files_directory():
-    """ Retrieves the directory of the raw files to be interpreted by the `get_articles_dataframe`
-        function.
-
-    Returns:
-        `str`: The path that leads to the directory of the raw files.
-    """
-    rt = RichTerminal()
-
-    # The set to house all of the directories in the current working directory
-    directories = set()
-
-    # Goes through all of the directories in the current working directory and checks if "raw-files"
-    # is there.
-    for _, dirs, _ in os.walk(os.getcwd(), topdown=True):
-        for name in dirs:
-            directories.add(name)
-
-    # If raw files isn't at the current working directory, we move up one directory and check there.
-    c = 0
-    while "raw-files" not in directories:
-        os.chdir('..')
-        for _, dirs, _ in os.walk(".", topdown=True):
-            for name in dirs:
-                directories.add(name)
-        c += 1
-
-        if c == 4:
-            rt.print_alert(
-                "Searched up 5 directories and did not find the 'raw-files' directory. \nAre you \
-                sure it is there? Please check the name of the directory."
-            )
-
-    # Once we have
-    raw_files_path = os.path.join(os.getcwd(), "raw-files")
-
-    return raw_files_path
 
 
 def get_articles_dataframe(verbose=False):
@@ -68,17 +29,15 @@ def get_articles_dataframe(verbose=False):
     # Creates a dictionary to store the data.
     data = dict()
 
-    raw_files_path = get_raw_files_directory()
-
     # Reads the CSV files, filters the "NaN" characters, and stores them in temporary variables.
-    buzzfeed_dataframe_fake = pd.read_csv(
-        os.path.join(raw_files_path, "BuzzFeed_fake_news_content.csv")).fillna("None")
-    buzzfeed_dataframe_real = pd.read_csv(
-        os.path.join(raw_files_path, "BuzzFeed_real_news_content.csv")).fillna("None")
-    politifact_dataframe_fake = pd.read_csv(
-        "../raw-files/PolitiFact_fake_news_content.csv").fillna("None")
-    politifact_dataframe_real = pd.read_csv(
-        "../raw-files/PolitiFact_real_news_content.csv").fillna("None")
+    buzzfeed_dataframe_fake = pd.read_csv(get_file_directory(
+        "BuzzFeed_fake_news_content.csv")).fillna("None")
+    buzzfeed_dataframe_real = pd.read_csv(get_file_directory(
+        "BuzzFeed_real_news_content.csv")).fillna("None")
+    politifact_dataframe_fake = pd.read_csv(get_file_directory(
+        "PolitiFact_fake_news_content.csv")).fillna("None")
+    politifact_dataframe_real = pd.read_csv(get_file_directory(
+        "PolitiFact_real_news_content.csv")).fillna("None")
 
     #
     real_dataframes = [buzzfeed_dataframe_real, politifact_dataframe_real]
@@ -132,6 +91,7 @@ def get_article_name(id_num: int, outlet: str, is_fake: bool):
     Args:
         ID (`int`): The ID of the article so that it can be found in the [outlet]News.txt file.
         outlet (`str`): The outlet of the article. ALL LOWERCASE (`buzzfeed` or `politifact`).
+        is_fake: Is the article fake?
 
     Returns:
         `str`: Returns the name of the article.
@@ -140,11 +100,11 @@ def get_article_name(id_num: int, outlet: str, is_fake: bool):
     # to quickly find the name within the file.
     if outlet == "buzzfeed":
         if is_fake:
-            return linecache.getline("./raw/BuzzFeedNews.txt", id_num - 1 + 91).replace('\n', '')
-        return linecache.getline("./raw/BuzzFeedNews.txt", id_num - 1).replace('\n', '')
+            return linecache.getline(get_file_directory("BuzzFeedNews.txt"), id_num - 1 + 91).replace('\n', '')
+        return linecache.getline(get_file_directory("BuzzFeedNews.txt"), id_num - 1).replace('\n', '')
     if is_fake:
-        return linecache.getline("./raw/PolitiFactNews.txt", id_num - 1 + 120).replace('\n', '')
-    return linecache.getline("./raw/PolitiFactNews.txt", id_num - 1).replace('\n', '')
+        return linecache.getline(get_file_directory("PolitiFactNews.txt"), id_num - 1 + 120).replace('\n', '')
+    return linecache.getline(get_file_directory("PolitiFactNews.txt"), id_num - 1).replace('\n', '')
 
 
 def is_article_fake(name: str):
