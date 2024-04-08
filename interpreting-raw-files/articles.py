@@ -100,11 +100,15 @@ def get_article_name(id_num: int, outlet: str, is_fake: bool):
     # to quickly find the name within the file.
     if outlet == "buzzfeed":
         if is_fake:
-            return linecache.getline(get_file_directory("BuzzFeedNews.txt"), id_num - 1 + 91).replace('\n', '')
-        return linecache.getline(get_file_directory("BuzzFeedNews.txt"), id_num - 1).replace('\n', '')
+            return linecache.getline(get_file_directory("BuzzFeedNews.txt"), id_num - 1 + 91)\
+                .replace('\n', '')
+        return linecache.getline(get_file_directory("BuzzFeedNews.txt"), id_num - 1)\
+            .replace('\n', '')
     if is_fake:
-        return linecache.getline(get_file_directory("PolitiFactNews.txt"), id_num - 1 + 120).replace('\n', '')
-    return linecache.getline(get_file_directory("PolitiFactNews.txt"), id_num - 1).replace('\n', '')
+        return linecache.getline(get_file_directory("PolitiFactNews.txt"), id_num - 1 + 120)\
+            .replace('\n', '')
+    return linecache.getline(get_file_directory("PolitiFactNews.txt"), id_num - 1)\
+        .replace('\n', '')
 
 
 def is_article_fake(name: str):
