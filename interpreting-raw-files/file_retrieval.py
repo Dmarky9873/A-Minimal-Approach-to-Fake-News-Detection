@@ -12,8 +12,7 @@ FILE_LOCATIONS_DB_NAME = "file-locations.db"
 
 
 def get_file_location(file: str):
-    """ Retrieves the directory of the raw files to be interpreted by the `get_articles_dataframe`
-        function.
+    """ Retrieves the location of `file`.
 
     Returns:
         `str`: The path that leads to the location of `file`.
