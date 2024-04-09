@@ -1,3 +1,10 @@
+"""
+
+    Author: Daniel Markusson
+
+
+"""
+
 from setuptools import setup, find_packages
 
 

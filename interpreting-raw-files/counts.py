@@ -10,7 +10,7 @@ import linecache
 from articles import get_articles_dataframe, is_article_fake
 from article_user_relationship import user_article_shares
 from users import get_username, get_users, get_follow_relationships
-from file_retrieval import get_file_directory
+from file_retrieval import get_file_location
 from rt.rich_terminal import RichTerminal
 
 
@@ -30,9 +30,9 @@ def get_article_counts(verbose=False):
     articles = get_articles_dataframe(verbose)
     stats = dict()
     buzzfeed_stats = user_article_shares(
-        get_file_directory("BuzzFeedNewsUser.txt"))
+        get_file_location("BuzzFeedNewsUser.txt"))
     politifact_stats = user_article_shares(
-        get_file_directory("PolitiFactNewsUser.txt"))
+        get_file_location("PolitiFactNewsUser.txt"))
 
     error_articles = set()
 
@@ -44,7 +44,7 @@ def get_article_counts(verbose=False):
         stats[name] = {"shares": 0, "users-who-shared": set()}
 
     for stat in buzzfeed_stats:
-        name = linecache.getline(get_file_directory(
+        name = linecache.getline(get_file_location(
             "BuzzFeedNews.txt"), int(stat[0])).replace('\n', '')
         try:
             stats[name]["shares"] += int(stat[2].replace('\n', ''))
@@ -60,7 +60,7 @@ def get_article_counts(verbose=False):
 
     for stat in politifact_stats:
         name = linecache.getline(
-            get_file_directory("PolitiFactNews.txt"), int(stat[0])).replace('\n', '')
+            get_file_location("PolitiFactNews.txt"), int(stat[0])).replace('\n', '')
         try:
             stats[name]["shares"] += int(stat[2])
             stats[name]["users-who-shared"].add(

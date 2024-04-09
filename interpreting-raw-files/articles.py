@@ -8,7 +8,7 @@
 
 import linecache
 import pandas as pd
-from file_retrieval import get_file_directory
+from file_retrieval import get_file_location
 from rt.rich_terminal import RichTerminal
 
 
@@ -30,13 +30,13 @@ def get_articles_dataframe(verbose=False):
     data = dict()
 
     # Reads the CSV files, filters the "NaN" characters, and stores them in temporary variables.
-    buzzfeed_dataframe_fake = pd.read_csv(get_file_directory(
+    buzzfeed_dataframe_fake = pd.read_csv(get_file_location(
         "BuzzFeed_fake_news_content.csv")).fillna("None")
-    buzzfeed_dataframe_real = pd.read_csv(get_file_directory(
+    buzzfeed_dataframe_real = pd.read_csv(get_file_location(
         "BuzzFeed_real_news_content.csv")).fillna("None")
-    politifact_dataframe_fake = pd.read_csv(get_file_directory(
+    politifact_dataframe_fake = pd.read_csv(get_file_location(
         "PolitiFact_fake_news_content.csv")).fillna("None")
-    politifact_dataframe_real = pd.read_csv(get_file_directory(
+    politifact_dataframe_real = pd.read_csv(get_file_location(
         "PolitiFact_real_news_content.csv")).fillna("None")
 
     #
@@ -100,14 +100,14 @@ def get_article_name(id_num: int, outlet: str, is_fake: bool):
     # to quickly find the name within the file.
     if outlet == "buzzfeed":
         if is_fake:
-            return linecache.getline(get_file_directory("BuzzFeedNews.txt"), id_num - 1 + 91)\
+            return linecache.getline(get_file_location("BuzzFeedNews.txt"), id_num - 1 + 91)\
                 .replace('\n', '')
-        return linecache.getline(get_file_directory("BuzzFeedNews.txt"), id_num - 1)\
+        return linecache.getline(get_file_location("BuzzFeedNews.txt"), id_num - 1)\
             .replace('\n', '')
     if is_fake:
-        return linecache.getline(get_file_directory("PolitiFactNews.txt"), id_num - 1 + 120)\
+        return linecache.getline(get_file_location("PolitiFactNews.txt"), id_num - 1 + 120)\
             .replace('\n', '')
-    return linecache.getline(get_file_directory("PolitiFactNews.txt"), id_num - 1)\
+    return linecache.getline(get_file_location("PolitiFactNews.txt"), id_num - 1)\
         .replace('\n', '')
 
 

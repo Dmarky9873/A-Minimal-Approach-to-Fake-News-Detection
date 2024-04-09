@@ -1,4 +1,9 @@
+# My own files
 /cleaned_data.json
+/call-graph.png
+
+# Premade ones
+
 .DS_Store
 
 # Byte-compiled / optimized / DLL files
