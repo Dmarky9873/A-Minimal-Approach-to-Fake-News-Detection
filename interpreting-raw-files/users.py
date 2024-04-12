@@ -8,7 +8,6 @@
 
 import linecache
 from file_retrieval import get_raw_file_location
-from rich.progress import Progress
 
 BUZZFEED_USERNAMES_DIR = get_raw_file_location("BuzzFeedUser.txt")
 POLITIFACT_USERNAMES_DIR = get_raw_file_location("PolitiFactUser.txt")
