@@ -12,6 +12,7 @@ fixes.
 
 ## Reporting a Vulnerability
 
-Please create an issue within GitHub clearly outlining the issue(s), 
-how to reproduce it, and any applicable files (pictures will be 
-appreciated!).
+If you think you have found a security vulnerability, please **DO NOT** 
+disclose it publicly until I've had a chance to fix it.
+Please don’t report security vulnerabilities using GitHub issues, email 
+me personally at markussondan@gmail.com.
