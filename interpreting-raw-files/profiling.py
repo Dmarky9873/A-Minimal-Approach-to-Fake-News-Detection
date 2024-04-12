@@ -1,3 +1,11 @@
+"""
+
+
+    Author: Daniel Markussson
+
+
+"""
+
 from pycallgraph2 import PyCallGraph
 from pycallgraph2 import Config
 from pycallgraph2 import GlobbingFilter

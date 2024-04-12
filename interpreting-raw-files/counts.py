@@ -7,11 +7,10 @@
 """
 
 import linecache
-from articles import get_articles_dataframe, is_article_fake
+from articles import ARTICLES_DATAFRAME, is_article_fake, BUZZFEED_NAMES_DIR, POLITIFACT_NAMES_DIR
 from article_user_relationship import user_article_shares
-from users import get_username, get_users, get_follow_relationships
-from file_retrieval import get_file_location
-from rt.rich_terminal import RichTerminal
+from users import get_username, get_users, FOLLOW_RELATIONSHIPS
+from file_retrieval import get_raw_file_location
 
 
 def get_article_counts(verbose=False):
@@ -27,12 +26,12 @@ def get_article_counts(verbose=False):
         integer which is the number of times article `name` was shared. `users-who-shared` is a set 
         with the usernames of the users who shared article `name`.
     """
-    articles = get_articles_dataframe(verbose)
+    articles = ARTICLES_DATAFRAME
     stats = dict()
     buzzfeed_stats = user_article_shares(
-        get_file_location("BuzzFeedNewsUser.txt"))
+        get_raw_file_location("BuzzFeedNewsUser.txt"))
     politifact_stats = user_article_shares(
-        get_file_location("PolitiFactNewsUser.txt"))
+        get_raw_file_location("PolitiFactNewsUser.txt"))
 
     error_articles = set()
 
@@ -44,38 +43,32 @@ def get_article_counts(verbose=False):
         stats[name] = {"shares": 0, "users-who-shared": set()}
 
     for stat in buzzfeed_stats:
-        name = linecache.getline(get_file_location(
-            "BuzzFeedNews.txt"), int(stat[0])).replace('\n', '')
+        name = linecache.getline(
+            BUZZFEED_NAMES_DIR, int(stat[0])).replace('\n', '')
         try:
             stats[name]["shares"] += int(stat[2].replace('\n', ''))
             stats[name]["users-who-shared"].add(
                 get_username(int(stat[1]), 'buzzfeed'))
         except KeyError:
-            if verbose and name not in error_articles:
-                rt = RichTerminal()
-                rt.print_warn(
-                    name + " found in News-User relationship but no matching article was found.")
-                rt.print_minimal("Continuing...")
             error_articles.add(name)
 
     for stat in politifact_stats:
         name = linecache.getline(
-            get_file_location("PolitiFactNews.txt"), int(stat[0])).replace('\n', '')
+            POLITIFACT_NAMES_DIR, int(stat[0])).replace('\n', '')
         try:
             stats[name]["shares"] += int(stat[2])
             stats[name]["users-who-shared"].add(
                 get_username(int(stat[1]), 'politifact'))
         except KeyError:
-            if verbose:
-                rt = RichTerminal()
-                rt.print_warn(
-                    name + " found in News-User relationship but no matching article was found.")
-                rt.print_minimal("Continuing...")
+            error_articles.add(name)
 
     for _, values in stats.items():
         values["users-who-shared"] = list(values["users-who-shared"])
 
     return stats
+
+
+ARTICLE_COUNTS = get_article_counts(False)
 
 
 def get_user_counts(verbose=False):
@@ -131,7 +124,7 @@ def get_user_counts(verbose=False):
         }}
 
     # Gets all of the "a follows b" user-user relationships.
-    a_follows_b = get_follow_relationships()
+    a_follows_b = FOLLOW_RELATIONSHIPS
 
     # Analyzes the `a_follows_b` set and increments/adds people to the required stored variables.
     for follower, receiving_follow in a_follows_b:
@@ -142,7 +135,7 @@ def get_user_counts(verbose=False):
         counts[follower]["following"]["users"].add(receiving_follow)
 
     # Gets the counts of the articles (number of shares and set of users who shared).
-    article_counts = get_article_counts(verbose)
+    article_counts = ARTICLE_COUNTS
 
     # Gets set-like object of all the names of articles.
     articles = article_counts.keys()
@@ -173,7 +166,10 @@ def get_user_counts(verbose=False):
     return counts
 
 
-def get_shares_list(verbose=False):
+USER_COUNTS = get_user_counts(False)
+
+
+def get_shares_list():
     """Helper function to retrieve a list of the number of shares for each article.
 
     Args:
@@ -183,12 +179,9 @@ def get_shares_list(verbose=False):
     Returns:
         `list`: A list of the number of shares for each article within the dataset.
     """
-    counts = get_article_counts(verbose)
+    counts = ARTICLE_COUNTS
     articles = counts.keys()
     shares_list = []
     for article in articles:
         shares_list.append(counts[article]['shares'])
     return shares_list
-
-
-get_article_counts()

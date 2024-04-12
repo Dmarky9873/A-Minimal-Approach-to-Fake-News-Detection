@@ -8,6 +8,8 @@ import statistics
 from counts import get_user_counts
 from counts import get_shares_list
 
+USER_COUNTS = get_user_counts()
+
 
 def get_user_summary_statistics(verbose=False):
     """Gets the summary statistics of the user counts.
@@ -19,8 +21,7 @@ def get_user_summary_statistics(verbose=False):
     Returns:
         `dict`: Dictionary of summary statistics for counts.
     """
-    user_counts = get_user_counts(verbose)
-    users = user_counts.keys()
+    users = USER_COUNTS.keys()
     summary_statistics = dict()
 
     followers_list = []
@@ -30,15 +31,15 @@ def get_user_summary_statistics(verbose=False):
     num_real_articles_shared_list = []
 
     for user in users:
-        followers_list.append(user_counts[user]["followers"]["count"])
-        following_list.append(user_counts[user]["following"]["count"])
+        followers_list.append(USER_COUNTS[user]["followers"]["count"])
+        following_list.append(USER_COUNTS[user]["following"]["count"])
 
         num_articles_shared_list.append(
-            user_counts[user]["articles"]["num-shared"])
+            USER_COUNTS[user]["articles"]["num-shared"])
         num_fake_articles_shared_list.append(
-            user_counts[user]["articles"]["num-fake-shared"])
+            USER_COUNTS[user]["articles"]["num-fake-shared"])
         num_real_articles_shared_list.append(
-            user_counts[user]["articles"]["num-real-shared"])
+            USER_COUNTS[user]["articles"]["num-real-shared"])
 
     summary_statistics["followers"] = {
         "data": followers_list, "mean": statistics.mean(
@@ -104,7 +105,7 @@ def get_articles_summary_statistics(verbose=False):
         article). Keys: `data`, `mean`, `median`, `mode`, `q1`, `q3`, and `stdev`.
     """
 
-    shares_list = get_shares_list(verbose)
+    shares_list = get_shares_list()
 
     summary_statistics = dict()
 

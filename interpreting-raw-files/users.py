@@ -7,7 +7,10 @@
 """
 
 import linecache
-from file_retrieval import get_file_location
+from file_retrieval import get_raw_file_location
+
+BUZZFEED_USERNAMES_DIR = get_raw_file_location("BuzzFeedUser.txt")
+POLITIFACT_USERNAMES_DIR = get_raw_file_location("PolitiFactUser.txt")
 
 
 def get_username(id_num: int, outlet: str):
@@ -21,8 +24,9 @@ def get_username(id_num: int, outlet: str):
         `str`: The unique username of user `ID`.
     """
     if outlet == 'buzzfeed':
-        return linecache.getline(get_file_location("BuzzFeedUser.txt"), id_num).replace('\n', '')
-    return linecache.getline(get_file_location("PolitiFactUser.txt"), id_num).replace('\n', '')
+        return linecache.getline(BUZZFEED_USERNAMES_DIR, id_num)\
+            .replace('\n', '')
+    return linecache.getline(POLITIFACT_USERNAMES_DIR, id_num).replace('\n', '')
 
 
 def get_users():
@@ -33,11 +37,11 @@ def get_users():
     """
 
     users = set()
-    with open(get_file_location("PolitiFactUser.txt"), encoding="UTF-8") as f:
+    with open(POLITIFACT_USERNAMES_DIR, encoding="UTF-8") as f:
         for l in f:
             users.add(l.replace('\n', ''))
 
-    with open(get_file_location("BuzzFeedUser.txt"), encoding="UTF-8") as f:
+    with open(BUZZFEED_USERNAMES_DIR, encoding="UTF-8") as f:
         for l in f:
             users.add(l.replace('\n', ''))
 
@@ -52,7 +56,7 @@ def get_follow_relationships():
     """
     a_follows_b = set()
 
-    with open(get_file_location("BuzzFeedUserUser.txt"), encoding="UTF-8") as f:
+    with open(get_raw_file_location("BuzzFeedUserUser.txt"), encoding="UTF-8") as f:
         for l in f:
             l_ = l.replace('\n', '').split('\t')
             a, b = int(l_[0]), int(l_[1])
@@ -63,7 +67,7 @@ def get_follow_relationships():
 
             a_follows_b.add((username_a, username_b))
 
-    with open(get_file_location("PolitiFactUserUser.txt"), encoding="UTF-8") as f:
+    with open(get_raw_file_location("PolitiFactUserUser.txt"), encoding="UTF-8") as f:
         for l in f:
             l_ = l.replace('\n', '').split('\t')
             a = int(l_[0])
@@ -77,3 +81,6 @@ def get_follow_relationships():
             a_follows_b.add((username_a, username_b))
 
     return a_follows_b
+
+
+FOLLOW_RELATIONSHIPS = get_follow_relationships()

@@ -8,11 +8,13 @@
 
 import linecache
 import pandas as pd
-from file_retrieval import get_file_location
-from rt.rich_terminal import RichTerminal
+from file_retrieval import get_raw_file_location
+
+BUZZFEED_NAMES_DIR = get_raw_file_location("BuzzFeedNews.txt")
+POLITIFACT_NAMES_DIR = get_raw_file_location("PolitiFactNews.txt")
 
 
-def get_articles_dataframe(verbose=False):
+def get_articles_dataframe():
     """ Returns a dictionary where `get_fake_real()['fake']` has the content of the fake news
         articles and `get_fake_real()['real']` has the content of the real news articles.
 
@@ -30,13 +32,13 @@ def get_articles_dataframe(verbose=False):
     data = dict()
 
     # Reads the CSV files, filters the "NaN" characters, and stores them in temporary variables.
-    buzzfeed_dataframe_fake = pd.read_csv(get_file_location(
+    buzzfeed_dataframe_fake = pd.read_csv(get_raw_file_location(
         "BuzzFeed_fake_news_content.csv")).fillna("None")
-    buzzfeed_dataframe_real = pd.read_csv(get_file_location(
+    buzzfeed_dataframe_real = pd.read_csv(get_raw_file_location(
         "BuzzFeed_real_news_content.csv")).fillna("None")
-    politifact_dataframe_fake = pd.read_csv(get_file_location(
+    politifact_dataframe_fake = pd.read_csv(get_raw_file_location(
         "PolitiFact_fake_news_content.csv")).fillna("None")
-    politifact_dataframe_real = pd.read_csv(get_file_location(
+    politifact_dataframe_real = pd.read_csv(get_raw_file_location(
         "PolitiFact_real_news_content.csv")).fillna("None")
 
     #
@@ -61,27 +63,6 @@ def get_articles_dataframe(verbose=False):
     data['real'] = pd.concat(real_dataframes)
     data['fake'] = pd.concat(fake_dataframes)
 
-    if verbose:
-        rt = RichTerminal()
-
-        print(rt.get_string_minimal(
-            "Successfully retrieved all fake and real dataframes.") + " \nDataframes:\n")
-        print("BuzzFeed_real size:", rt.get_string_major(
-            buzzfeed_dataframe_real.size))
-        print("BuzzFeed_fake size:", rt.get_string_major(
-            buzzfeed_dataframe_fake.size))
-        print("PolitiFact_real size:", rt.get_string_major(
-            politifact_dataframe_real.size))
-        print("PolitiFact_fake size:", rt.get_string_major(
-            politifact_dataframe_fake.size))
-        print(rt.page_break)
-
-        print(rt.get_string_minimal(
-            """Successfully concatinated all dataframes.""") + "\nDataframes:\n")
-        print("Dataframe_real size: " + rt.get_string_major(data['real'].size))
-        print("Dataframe_fake size: " + rt.get_string_major(data['fake'].size))
-        print("\n\n")
-
     return data
 
 
@@ -100,14 +81,14 @@ def get_article_name(id_num: int, outlet: str, is_fake: bool):
     # to quickly find the name within the file.
     if outlet == "buzzfeed":
         if is_fake:
-            return linecache.getline(get_file_location("BuzzFeedNews.txt"), id_num - 1 + 91)\
+            return linecache.getline(BUZZFEED_NAMES_DIR, id_num - 1 + 91)\
                 .replace('\n', '')
-        return linecache.getline(get_file_location("BuzzFeedNews.txt"), id_num - 1)\
+        return linecache.getline(BUZZFEED_NAMES_DIR, id_num - 1)\
             .replace('\n', '')
     if is_fake:
-        return linecache.getline(get_file_location("PolitiFactNews.txt"), id_num - 1 + 120)\
+        return linecache.getline(POLITIFACT_NAMES_DIR, id_num - 1 + 120)\
             .replace('\n', '')
-    return linecache.getline(get_file_location("PolitiFactNews.txt"), id_num - 1)\
+    return linecache.getline(POLITIFACT_NAMES_DIR, id_num - 1)\
         .replace('\n', '')
 
 
@@ -123,3 +104,6 @@ def is_article_fake(name: str):
     if "Fake" in name:
         return True
     return False
+
+
+ARTICLES_DATAFRAME = get_articles_dataframe()
