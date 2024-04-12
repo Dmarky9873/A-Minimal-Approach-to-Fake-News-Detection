@@ -31,14 +31,14 @@ def update_json(output_file: str):
     data["articles"] = {
         "fake-articles": dict(), "real-articles": dict(),
         "counts": ARTICLE_COUNTS,
-        "statistics": get_articles_summary_statistics(False)
+        "statistics": get_articles_summary_statistics()
     }
 
     data["articles"]["fake-articles"] = ARTICLES_DATAFRAME["fake"].to_dict()
     data["articles"]["real-articles"] = ARTICLES_DATAFRAME["real"].to_dict()
 
     data["users"] = {"counts": USER_COUNTS,
-                     "statistics": get_user_summary_statistics(False)}
+                     "statistics": get_user_summary_statistics()}
 
     with open(json_location, 'w', encoding="UTF-8") as f:
         json.dump(data, f)

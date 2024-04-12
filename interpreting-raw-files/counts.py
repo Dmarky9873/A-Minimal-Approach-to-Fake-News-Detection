@@ -11,6 +11,7 @@ from articles import ARTICLES_DATAFRAME, is_article_fake, BUZZFEED_NAMES_DIR, PO
 from article_user_relationship import user_article_shares
 from users import get_username, get_users, FOLLOW_RELATIONSHIPS
 from file_retrieval import get_raw_file_location
+from rich.progress import track
 
 
 def get_article_counts():
@@ -42,7 +43,7 @@ def get_article_counts():
     for name in articles['real'].id:
         stats[name] = {"shares": 0, "users-who-shared": set()}
 
-    for stat in buzzfeed_stats:
+    for stat in track(buzzfeed_stats, description="tabulating buzzfeed sharing counts..."):
         name = linecache.getline(
             BUZZFEED_NAMES_DIR, int(stat[0])).replace('\n', '')
         try:
@@ -52,7 +53,7 @@ def get_article_counts():
         except KeyError:
             error_articles.add(name)
 
-    for stat in politifact_stats:
+    for stat in track(politifact_stats, description="tabulating politifact sharing counts..."):
         name = linecache.getline(
             POLITIFACT_NAMES_DIR, int(stat[0])).replace('\n', '')
         try:
@@ -62,7 +63,7 @@ def get_article_counts():
         except KeyError:
             error_articles.add(name)
 
-    for _, values in stats.items():
+    for _, values in track(stats.items(), description="converting sets to serializable types..."):
         values["users-who-shared"] = list(values["users-who-shared"])
 
     return stats
@@ -127,7 +128,7 @@ def get_user_counts():
     a_follows_b = FOLLOW_RELATIONSHIPS
 
     # Analyzes the `a_follows_b` set and increments/adds people to the required stored variables.
-    for follower, receiving_follow in a_follows_b:
+    for follower, receiving_follow in track(a_follows_b, description="tabulating following counts"):
         counts[receiving_follow]["followers"]["count"] += 1
         counts[receiving_follow]["followers"]["users"].add(follower)
 
@@ -142,7 +143,7 @@ def get_user_counts():
 
     # Analyzes `articleCounts`, modifying variables within `counts` based on what articles were
     # shared by whom.
-    for article in articles:
+    for article in track(articles, description="checking if articles shared were real or fake..."):
         users_who_shared = article_counts[article]["users-who-shared"]
 
         for user in users_who_shared:
@@ -153,7 +154,7 @@ def get_user_counts():
             else:
                 counts[user]["articles"]["num-real-shared"] += 1
 
-    for user in users:
+    for user in track(users, description="converting sets to serializable types..."):
         counts[user]["followers"]["users"] = list(
             counts[user]["followers"]["users"])
 

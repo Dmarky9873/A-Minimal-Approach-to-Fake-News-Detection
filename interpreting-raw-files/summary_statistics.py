@@ -11,7 +11,7 @@ from counts import get_shares_list
 USER_COUNTS = get_user_counts()
 
 
-def get_user_summary_statistics(verbose=False):
+def get_user_summary_statistics():
     """Gets the summary statistics of the user counts.
 
     Args:
@@ -93,7 +93,7 @@ def get_user_summary_statistics(verbose=False):
     return summary_statistics
 
 
-def get_articles_summary_statistics(verbose=False):
+def get_articles_summary_statistics():
     """Gets the summary statistics of the articles (number of shares).
 
     Args:
