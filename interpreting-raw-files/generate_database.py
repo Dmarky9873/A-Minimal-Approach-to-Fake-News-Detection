@@ -4,7 +4,6 @@
     Summary:
                 
 """
-import os
 import simplejson as json
 from counts import USER_COUNTS, ARTICLE_COUNTS
 from summary_statistics import get_articles_summary_statistics, get_user_summary_statistics

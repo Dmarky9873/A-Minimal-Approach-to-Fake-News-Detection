@@ -13,7 +13,7 @@ from users import get_username, get_users, FOLLOW_RELATIONSHIPS
 from file_retrieval import get_raw_file_location
 
 
-def get_article_counts(verbose=False):
+def get_article_counts():
     """Gets the counts of the articles (num shares and users who shared).
 
     Args:
@@ -68,10 +68,10 @@ def get_article_counts(verbose=False):
     return stats
 
 
-ARTICLE_COUNTS = get_article_counts(False)
+ARTICLE_COUNTS = get_article_counts()
 
 
-def get_user_counts(verbose=False):
+def get_user_counts():
     """Gets the counts of the users (number of followers, number of people following, followers, 
     people following, number of shared articles, and articles shared). VERY LARGE.
 
@@ -166,7 +166,7 @@ def get_user_counts(verbose=False):
     return counts
 
 
-USER_COUNTS = get_user_counts(False)
+USER_COUNTS = get_user_counts()
 
 
 def get_shares_list():
