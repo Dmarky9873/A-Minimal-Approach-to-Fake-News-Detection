@@ -4,6 +4,8 @@
     Summary:
                 
 """
+
+import os
 import simplejson as json
 from counts import USER_COUNTS, ARTICLE_COUNTS
 from summary_statistics import get_articles_summary_statistics, get_user_summary_statistics
@@ -47,7 +49,7 @@ def update_json(output_file: str):
 def main():
     """Main method to be run if this file is ran.
     """
-    # os.system("clear")
+    os.system("clear")
     console.print(LOGO, style="bright_white")
     console.print("[bold]Analyzing the Spread of Online Media (AweSOMe)[/bold]\n\n",
                   style="bright_white")

@@ -6,6 +6,8 @@
 
 """
 
+import rich.progress
+
 
 def user_article_shares(path: str):
     """Helper function that interprets each line from the [outlet]NewsUser.txt file as a list with 
