@@ -20,5 +20,5 @@ config.trace_filter = GlobbingFilter(exclude=[
 graphviz = GraphvizOutput(output_file='call-graph.png')
 
 with PyCallGraph(output=graphviz, config=config):
-    from GENERATE_DATABASE import main
-    main()
+    from GENERATE_DATABASE import for_profiling
+    for_profiling()

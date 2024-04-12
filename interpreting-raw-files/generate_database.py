@@ -5,6 +5,7 @@
                 
 """
 
+import uuid
 import os
 import simplejson as json
 from counts import USER_COUNTS, ARTICLE_COUNTS
@@ -20,11 +21,11 @@ console = Console(theme=THEME)
 
 
 def update_json(output_file: str):
-    """Updates the JSON "database" with the information from the raw files.
+    """ Uses data gathered from the raw files to produce a convenient JSON file with all the 
+        information for further use.
 
     Args:
-        verbose (bool, optional): Set `True` for more information during method call. Defaults to
-        False.
+        output_file (str): The name of the output file.
     """
     json_location = get_json_location(output_file)
 
@@ -64,6 +65,23 @@ def main():
         console.print(f"The filename is invalid!\nError: {e}", style="alert")
     else:
         update_json(name)
+
+
+def for_profiling():
+    """ Exact same function as the main function but without the console input. This provides a 
+        more accurate profile for testing.
+    """
+    os.system("clear")
+    console.print(LOGO, style="bright_white")
+    console.print("[bold]Analyzing the Spread of Online Media (AweSOMe)[/bold]\n\n",
+                  style="bright_white")
+
+    console.print(
+        "Please enter the name of the output file: \n\n", style="info")
+    name = uuid.uuid4().hex
+    console.print(f"""Automatically setting name to [file]{
+                  name}[/file] for profiling purposes""", style="info")
+    update_json(name)
 
 
 if __name__ == '__main__':
