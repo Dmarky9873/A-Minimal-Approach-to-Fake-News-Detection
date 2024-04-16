@@ -10,7 +10,7 @@ import sys
 from rich.console import Console
 from definitions import RAW_FILES_DIR, THEME, ROOT_DIR
 
-console = Console(theme=THEME)
+CONSOLE = Console(theme=THEME)
 
 
 def get_raw_file_location(file: str):
@@ -22,21 +22,20 @@ def get_raw_file_location(file: str):
 
     path = os.path.join(RAW_FILES_DIR, file)
     if os.path.exists(path):
-        console.print(
+        CONSOLE.print(
             f"[file]{file}[/file] loaded from [file]{path}[/file]", style="success")
         return path
-    elif os.path.exists(RAW_FILES_DIR):
-        console.print(
+    if os.path.exists(RAW_FILES_DIR):
+        CONSOLE.print(
             f"[file]{file}[/file] not found.",
             style="alert"
         )
         raise FileNotFoundError
-    else:
-        console.print(
-            "[alert]raw-files[/alert] directory not found.",
-            style="alert"
-        )
-        raise FileNotFoundError
+    CONSOLE.print(
+        "[alert]raw-files[/alert] directory not found.",
+        style="alert"
+    )
+    raise FileNotFoundError
 
 
 def get_json_location(file: str):
@@ -49,28 +48,28 @@ def get_json_location(file: str):
     path = os.path.join(ROOT_DIR, file)
 
     if os.path.exists(path):
-        console.print(f"""It seems that a JSON file named [file]{
+        CONSOLE.print(f"""It seems that a JSON file named [file]{
                       file}[/file] already exists. Are you fine with this being overwritten?""",
                       style="warn"
                       )
-        console.print(
+        CONSOLE.print(
             "(yes or no)\n[bold]y[/bold]: continue\n[bold]n[/bold]: quit", style="info")
         response = input()
         while True:
             if response.lower() == 'y':
-                console.print("Continuing...", style="info")
+                CONSOLE.print("Continuing...", style="info")
                 return path
 
             if response.lower() == 'n':
-                console.print(f"""Aborting...please remove [file]{
+                CONSOLE.print(f"""Aborting...please remove [file]{
                     file}[/file] from [file]{
                         ROOT_DIR}[/file] to prevent it from being overwritten.""",
                     style="warn")
                 sys.exit()
 
-            console.print(
+            CONSOLE.print(
                 f"Response of '{response}' is not y or n.", style="warn")
-            console.print(
+            CONSOLE.print(
                 "(yes or no)\n[bold]y[/bold]: continue\n[bold]n[/bold]: quit", style="info")
 
             response = input()

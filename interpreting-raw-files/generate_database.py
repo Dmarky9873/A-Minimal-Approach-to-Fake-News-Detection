@@ -16,7 +16,7 @@ from pathvalidate import ValidationError, validate_filename
 from definitions import THEME, LOGO
 
 
-console = Console(theme=THEME)
+CONSOLE = Console(theme=THEME)
 
 
 def update_json(output_file: str):
@@ -50,18 +50,18 @@ def main():
     """Main method to be run if this file is ran.
     """
     os.system("clear")
-    console.print(LOGO, style="bright_white")
-    console.print("[bold]Analyzing the Spread of Online Media (AweSOMe)[/bold]\n\n",
+    CONSOLE.print(LOGO, style="bright_white")
+    CONSOLE.print("[bold]Analyzing the Spread of Online Media (AweSOMe)[/bold]\n\n",
                   style="bright_white")
 
-    console.print(
+    CONSOLE.print(
         "Please enter the name of the output file: \n\n", style="info")
     name = input()
     try:
         validate_filename(name, platform='auto')
 
     except ValidationError as e:
-        console.print(f"The filename is invalid!\nError: {e}", style="alert")
+        CONSOLE.print(f"The filename is invalid!\nError: {e}", style="alert")
     else:
         update_json(name)
 
@@ -71,14 +71,14 @@ def for_profiling():
         more accurate profile for testing.
     """
     os.system("clear")
-    console.print(LOGO, style="bright_white")
-    console.print("[bold]Analyzing the Spread of Online Media (AweSOMe)[/bold]\n\n",
+    CONSOLE.print(LOGO, style="bright_white")
+    CONSOLE.print("[bold]Analyzing the Spread of Online Media (AweSOMe)[/bold]\n\n",
                   style="bright_white")
 
-    console.print(
+    CONSOLE.print(
         "Please enter the name of the output file: \n\n", style="info")
     name = uuid.uuid4().hex
-    console.print(f"""Automatically setting name to [file]{
+    CONSOLE.print(f"""Automatically setting name to [file]{
                   name}[/file] for profiling purposes""", style="info")
     update_json(name)
 
