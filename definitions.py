@@ -19,7 +19,7 @@ THEME = Theme({
     "warn": "yellow",
     "alert": "red",
     "success": "green",
-    "info": "blue"
+    "info": "blue",
 })
 
 LOGO = """

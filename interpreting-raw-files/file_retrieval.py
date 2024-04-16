@@ -69,7 +69,7 @@ def get_json_location(file: str):
                 sys.exit()
 
             console.print(
-                f"Response of {response} is not y or n.", style="warn")
+                f"Response of '{response}' is not y or n.", style="warn")
             console.print(
                 "(yes or no)\n[bold]y[/bold]: continue\n[bold]n[/bold]: quit", style="info")
 

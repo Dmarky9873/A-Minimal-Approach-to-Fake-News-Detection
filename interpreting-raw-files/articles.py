@@ -89,8 +89,14 @@ def get_articles_dict():
         for url in df.url:
             data["real-articles"]["urls"].append(url)
 
-        for author in df.authors:
-            data["real-articles"]["authors"].append(author)
+        for author_string in df.authors:
+            a = author_string.split(",")
+            author_list = []
+            for author in a:
+                if author == "None" or author.lower() == "view all posts":
+                    continue
+                author_list.append(author)
+            data["real-articles"]["authors"].append(author_list)
 
         for source in df.source:
             data["real-articles"]["sources"].append(source)
@@ -111,8 +117,14 @@ def get_articles_dict():
         for url in df.url:
             data["fake-articles"]["urls"].append(url)
 
-        for author in df.authors:
-            data["fake-articles"]["authors"].append(author)
+        for author_string in df.authors:
+            a = author_string.split(",")
+            author_list = []
+            for author in a:
+                if author == "None" or author.lower() == "view all posts":
+                    continue
+                author_list.append(author)
+            data["fake-articles"]["authors"].append(author_list)
 
         for source in df.source:
             data["fake-articles"]["sources"].append(source)
@@ -195,7 +207,7 @@ ARTICLES_DICT = get_articles_dict()
 
 
 def main():
-    """Main function to be run when current file is ran.
+    """ Main function to be run when current file is ran.
     """
     print('orange')
     print(ARTICLES_DICT["fake-articles"]["titles"])
