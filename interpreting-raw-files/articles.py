@@ -43,8 +43,8 @@ def get_articles_dict():
         articles and `get_fake_real()['real']` has the content of the real news articles.
 
     Args:
-        `showinfo` (bool, optional): If true, get_articles_dict() will print information regarding the
-        files it reads. If false, it doesn't. Defaults to True.
+        `showinfo` (bool, optional): If true, get_articles_dict() will print information regarding
+        the files it reads. If false, it doesn't. Defaults to True.
 
     Returns:
         `dict()`: A dictionary who's key `['fake']` is a pandas dataframe of the various fake news
@@ -74,24 +74,9 @@ def get_articles_dict():
         }
     }
 
-    real_dataframes, fake_dataframes = get_fake_real_dataframes()
+    real_dataframes, fake_dataframes = get_clean_dataframes()
 
-    for i in range(2):
-        for _, k in real_dataframes[i].iterrows():
-            old_id = k.id
-            num = int(old_id[old_id.index('_') + 1:old_id.index('-')]) + 1
-            outlet = "buzzfeed" if i == 0 else "politifact"
-            new_id = get_article_name(num, outlet, False)
-            k.id = new_id
-
-        for _, k in fake_dataframes[i].iterrows():
-            old_id = k.id
-            num = int(old_id[old_id.index('_') + 1:old_id.index('-')]) + 1
-            outlet = "buzzfeed" if i == 0 else "politifact"
-            new_id = get_article_name(num, outlet, True)
-            k.id = new_id
-
-    for i, df in enumerate(real_dataframes):
+    for _, df in enumerate(real_dataframes):
         for uid in df.id:
             data["real-articles"]["ids"].append(uid)
 
@@ -113,7 +98,7 @@ def get_articles_dict():
         for publish_date in df.publish_date:
             data["real-articles"]["publish-dates"].append(publish_date)
 
-    for i, df in enumerate(fake_dataframes):
+    for _, df in enumerate(fake_dataframes):
         for uid in df.id:
             data["fake-articles"]["ids"].append(uid)
 
@@ -136,6 +121,34 @@ def get_articles_dict():
             data["fake-articles"]["publish-dates"].append(publish_date)
 
     return data
+
+
+def get_clean_dataframes():
+    """ Returns the dataframes of the fake and real news articles from the BuzzFeed and PolitiFact 
+        datasets, but with the IDs changed to the format of the article names.
+
+    Returns:
+        tuple: A tuple where the first element is a list of the cleaned real news dataframes and 
+        the second element is a list of the cleaned fake news dataframes.
+    """
+    real_dataframes, fake_dataframes = get_fake_real_dataframes()
+
+    for i in range(2):
+        for _, k in real_dataframes[i].iterrows():
+            old_id = k.id
+            num = int(old_id[old_id.index('_') + 1:old_id.index('-')]) + 1
+            outlet = "buzzfeed" if i == 0 else "politifact"
+            new_id = get_article_name(num, outlet, False)
+            k.id = new_id
+
+        for _, k in fake_dataframes[i].iterrows():
+            old_id = k.id
+            num = int(old_id[old_id.index('_') + 1:old_id.index('-')]) + 1
+            outlet = "buzzfeed" if i == 0 else "politifact"
+            new_id = get_article_name(num, outlet, True)
+            k.id = new_id
+
+    return real_dataframes, fake_dataframes
 
 
 def get_article_name(id_num: int, outlet: str, is_fake: bool):
@@ -182,6 +195,8 @@ ARTICLES_DICT = get_articles_dict()
 
 
 def main():
+    """Main function to be run when current file is ran.
+    """
     print('orange')
     print(ARTICLES_DICT["fake-articles"]["titles"])
     print('green')
