@@ -9,8 +9,8 @@
 
 from rich.console import Console
 from rich.table import Table
-from definitions import THEME
 from get_json_dict import DATABASE
+from definitions import THEME
 
 CONSOLE = Console(theme=THEME)
 
