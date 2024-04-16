@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as matplotlib_colors
 
 
-def get_colors(graph):
+def get_colors(graph: nx.Graph):
     """ Gets a colormap for the network graph to be displayed based on the degrees of the nodes.
 
     Args:

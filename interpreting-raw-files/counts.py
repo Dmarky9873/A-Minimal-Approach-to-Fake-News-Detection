@@ -7,7 +7,7 @@
 """
 
 import linecache
-from articles import ARTICLES_DATAFRAME, is_article_fake, BUZZFEED_NAMES_DIR, POLITIFACT_NAMES_DIR
+from articles import ARTICLES_DICT, is_article_fake, BUZZFEED_NAMES_DIR, POLITIFACT_NAMES_DIR
 from article_user_relationship import user_article_shares
 from users import get_username, get_users, FOLLOW_RELATIONSHIPS
 from file_retrieval import get_raw_file_location
@@ -27,7 +27,7 @@ def get_article_counts():
         integer which is the number of times article `name` was shared. `users-who-shared` is a set 
         with the usernames of the users who shared article `name`.
     """
-    articles = ARTICLES_DATAFRAME
+    articles = ARTICLES_DICT
     stats = dict()
     buzzfeed_stats = user_article_shares(
         get_raw_file_location("BuzzFeedNewsUser.txt"))
@@ -37,10 +37,10 @@ def get_article_counts():
     error_articles = set()
 
     # Populating the dictionaries
-    for name in articles['fake'].id:
+    for name in articles['fake-articles']["ids"]:
         stats[name] = {"shares": 0, "users-who-shared": set()}
 
-    for name in articles['real'].id:
+    for name in articles['real-articles']["ids"]:
         stats[name] = {"shares": 0, "users-who-shared": set()}
 
     for stat in track(buzzfeed_stats, description="tabulating buzzfeed sharing counts..."):

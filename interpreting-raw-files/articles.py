@@ -14,23 +14,14 @@ BUZZFEED_NAMES_DIR = get_raw_file_location("BuzzFeedNews.txt")
 POLITIFACT_NAMES_DIR = get_raw_file_location("PolitiFactNews.txt")
 
 
-def get_articles_dataframe():
-    """ Returns a dictionary where `get_fake_real()['fake']` has the content of the fake news
-        articles and `get_fake_real()['real']` has the content of the real news articles.
-
-    Args:
-        `showinfo` (bool, optional): If true, get_fake_real() will print information regarding the
-        files it reads. If false, it doesn't. Defaults to True.
+def get_fake_real_dataframes():
+    """ Returns the dataframes of the fake and real news articles from the BuzzFeed and PolitiFact 
+        datasets.
 
     Returns:
-        `dict()`: A dictionary who's key `['fake']` is a pandas dataframe of the various fake news
-        articles within the dataset, and who's key `['real']` is a pandas dataframe of the various
-        real news articles within the dataset.
+        tuple: A tuple where the first element is a list of the real news dataframes and the second
+        element is a list of the fake news dataframes.
     """
-
-    # Creates a dictionary to store the data.
-    data = dict()
-
     # Reads the CSV files, filters the "NaN" characters, and stores them in temporary variables.
     buzzfeed_dataframe_fake = pd.read_csv(get_raw_file_location(
         "BuzzFeed_fake_news_content.csv")).fillna("None")
@@ -41,9 +32,49 @@ def get_articles_dataframe():
     politifact_dataframe_real = pd.read_csv(get_raw_file_location(
         "PolitiFact_real_news_content.csv")).fillna("None")
 
-    #
     real_dataframes = [buzzfeed_dataframe_real, politifact_dataframe_real]
     fake_dataframes = [buzzfeed_dataframe_fake, politifact_dataframe_fake]
+
+    return real_dataframes, fake_dataframes
+
+
+def get_articles_dict():
+    """ Returns a dictionary where `get_articles_dict()['fake']` has the content of the fake news
+        articles and `get_fake_real()['real']` has the content of the real news articles.
+
+    Args:
+        `showinfo` (bool, optional): If true, get_articles_dict() will print information regarding the
+        files it reads. If false, it doesn't. Defaults to True.
+
+    Returns:
+        `dict()`: A dictionary who's key `['fake']` is a pandas dataframe of the various fake news
+        articles within the dataset, and who's key `['real']` is a pandas dataframe of the various
+        real news articles within the dataset.
+    """
+
+    # Creates a dictionary to store the data.
+    data = {
+        "fake-articles": {
+            "ids": [],
+            "titles": [],
+            "bodies": [],
+            "urls": [],
+            "authors": [],
+            "sources": [],
+            "publish-dates": []
+        },
+        "real-articles": {
+            "ids": [],
+            "titles": [],
+            "bodies": [],
+            "urls": [],
+            "authors": [],
+            "sources": [],
+            "publish-dates": []
+        }
+    }
+
+    real_dataframes, fake_dataframes = get_fake_real_dataframes()
 
     for i in range(2):
         for _, k in real_dataframes[i].iterrows():
@@ -60,8 +91,49 @@ def get_articles_dataframe():
             new_id = get_article_name(num, outlet, True)
             k.id = new_id
 
-    data['real'] = pd.concat(real_dataframes)
-    data['fake'] = pd.concat(fake_dataframes)
+    for i, df in enumerate(real_dataframes):
+        for uid in df.id:
+            data["real-articles"]["ids"].append(uid)
+
+        for title in df.title:
+            data["real-articles"]["titles"].append(title)
+
+        for body in df.text:
+            data["real-articles"]["bodies"].append(body)
+
+        for url in df.url:
+            data["real-articles"]["urls"].append(url)
+
+        for author in df.authors:
+            data["real-articles"]["authors"].append(author)
+
+        for source in df.source:
+            data["real-articles"]["sources"].append(source)
+
+        for publish_date in df.publish_date:
+            data["real-articles"]["publish-dates"].append(publish_date)
+
+    for i, df in enumerate(fake_dataframes):
+        for uid in df.id:
+            data["fake-articles"]["ids"].append(uid)
+
+        for title in df.title:
+            data["fake-articles"]["titles"].append(title)
+
+        for body in df.text:
+            data["fake-articles"]["bodies"].append(body)
+
+        for url in df.url:
+            data["fake-articles"]["urls"].append(url)
+
+        for author in df.authors:
+            data["fake-articles"]["authors"].append(author)
+
+        for source in df.source:
+            data["fake-articles"]["sources"].append(source)
+
+        for publish_date in df.publish_date:
+            data["fake-articles"]["publish-dates"].append(publish_date)
 
     return data
 
@@ -106,4 +178,15 @@ def is_article_fake(name: str):
     return False
 
 
-ARTICLES_DATAFRAME = get_articles_dataframe()
+ARTICLES_DICT = get_articles_dict()
+
+
+def main():
+    print('orange')
+    print(ARTICLES_DICT["fake-articles"]["titles"])
+    print('green')
+    print(ARTICLES_DICT["real-articles"]["titles"])
+
+
+if __name__ == "__main__":
+    main()

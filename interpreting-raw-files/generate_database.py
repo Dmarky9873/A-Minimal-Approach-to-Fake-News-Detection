@@ -1,8 +1,7 @@
 """
+
     Author: Daniel Markusson
 
-    Summary:
-                
 """
 
 import uuid
@@ -11,7 +10,7 @@ import simplejson as json
 from counts import USER_COUNTS, ARTICLE_COUNTS
 from summary_statistics import get_articles_summary_statistics, get_user_summary_statistics
 from file_retrieval import get_json_location
-from articles import ARTICLES_DATAFRAME
+from articles import ARTICLES_DICT
 from rich.console import Console
 from pathvalidate import ValidationError, validate_filename
 from definitions import THEME, LOGO
@@ -37,8 +36,8 @@ def update_json(output_file: str):
         "statistics": get_articles_summary_statistics()
     }
 
-    data["articles"]["fake-articles"] = ARTICLES_DATAFRAME["fake"].to_dict()
-    data["articles"]["real-articles"] = ARTICLES_DATAFRAME["real"].to_dict()
+    data["articles"]["fake-articles"] = ARTICLES_DICT["fake-articles"]
+    data["articles"]["real-articles"] = ARTICLES_DICT["real-articles"]
 
     data["users"] = {"counts": USER_COUNTS,
                      "statistics": get_user_summary_statistics()}

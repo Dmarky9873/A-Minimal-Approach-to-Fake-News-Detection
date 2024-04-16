@@ -1,20 +1,21 @@
 """
 
+
     Author: Daniel Markusson
+
 
 """
 
-import json
 import random as r
 import networkx as nx
-from display_network_graph import display_network_graph
-
-with open("./cleaned_data.json", encoding="UTF-8") as f:
-    DATABASE = json.load(f)
+from visualization.display_network_graph import display_network_graph
 
 
-def network_graph_followers():
-    # TODO: Docstring
+def main():
+    """
+        Test that generates random values for the people below. Makes sure that 
+        `display_network_graph` is funcitonal.
+    """
     people = ["Alice", "Bob", "Charlie", "Xavier", "Warren"]
     a_follows_b = set()
 
@@ -30,12 +31,6 @@ def network_graph_followers():
     followers_network_graph.add_edges_from(a_follows_b)
 
     display_network_graph(followers_network_graph)
-
-
-def main():
-    """Main function; to be ran whenever the file is ran.
-    """
-    network_graph_followers()
 
 
 if __name__ == "__main__":

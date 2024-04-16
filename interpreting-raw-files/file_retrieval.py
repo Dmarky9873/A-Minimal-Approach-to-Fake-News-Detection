@@ -43,7 +43,7 @@ def get_json_location(file: str):
     """
         TODO: Document
     """
-    if not ".json" in file:
+    if ".json" not in file:
         file = str(file) + ".json"
 
     path = os.path.join(ROOT_DIR, file)
