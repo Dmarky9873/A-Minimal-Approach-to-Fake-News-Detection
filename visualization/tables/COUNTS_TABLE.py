@@ -7,12 +7,9 @@
 """
 
 
-from rich.console import Console
-from rich.table import Table
 from get_json_dict import DATABASE
 from definitions import THEME
-
-CONSOLE = Console(theme=THEME)
+from create_table import create_table
 
 
 def display_counts_table():
@@ -23,24 +20,7 @@ def display_counts_table():
     # TODO: Add a function that returns the number of unique articles.
     # TODO: Add a function that returns the number of fake articles.
     # TODO: Add a function that returns the number of real articles.
-    table = Table(title="Counts")
-
-    table.add_column("Number of Unique Authors",
-                     justify="center", style="cyan")
-    table.add_column("Number of Authors who publish both Fake and Real Articles",
-                     justify="center", style="cyan")
-    table.add_column("Number of Fake Articles",
-                     justify="center", style="magenta")
-    table.add_column("Number of Real Articles",
-                     justify="center", style="magenta")
-    table.add_column("Number of Unique Articles",
-                     justify="center", style="green")
-    table.add_column("Number of Unique Users", justify="center", style="green")
-
-    author_count, authors_who_publish_both = get_author_count()
-    table.add_row(str(author_count), str(authors_who_publish_both))
-
-    CONSOLE.print(table)
+    ...
 
 
 def get_author_count():
