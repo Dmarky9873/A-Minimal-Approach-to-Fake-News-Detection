@@ -5,6 +5,7 @@
 
 """
 import plotly.graph_objects as go
+from directory_finder import get_file_to_export_path
 TABLE_THEME = {
     "light_row_color": "#EAEAF1",
     "dark_row_color": "#dedeea",
@@ -14,11 +15,10 @@ TABLE_THEME = {
 }
 
 
-def create_table(table_title: str,
+def create_table(file_name: str, table_title: str,
                  independent_vars: list,
                  dependent_vars: list,
                  values: list[list],
-                 table_num=-1,
                  ):
     """ Creates a table with the given parameters.
 
@@ -34,7 +34,7 @@ def create_table(table_title: str,
         values_list.append(add_br_suffix(value))
     table = go.Figure(data=[go.Table(
         header=dict(
-            values=[f"<b>{var}<b>" for var in add_br_suffix(independent_vars)],
+            values=[f"<b>{var}<b>" for var in independent_vars],
             line_color=TABLE_THEME["line_color"],
             fill_color=TABLE_THEME["header_color"],
             align=["center"],
@@ -52,25 +52,18 @@ def create_table(table_title: str,
         ))
     ])
 
-    if table_num == -1:
-        table.update_layout(title={
-            'text': f"<b>{table_title}<b>",
-            'y': 0.85,
-            'x': 0.5,
-            'xanchor': 'center',
-            'yanchor': 'top',
-            'font': dict(size=20, color=TABLE_THEME["text_color"])})
-    else:
-        table.update_layout(title={
-            'text': f"<b>Table #{table_num}.<b> {table_title}",
-            'y': 0.85,
-            'x': 0.5,
-            'xanchor': 'center',
-            'yanchor': 'top',
-            'font': dict(size=20, color=TABLE_THEME["text_color"])})
+    table.update_layout(title={
+        'text': f"<b>{table_title}<b>",
+        'y': 0.8,
+        'x': 0.5,
+        'xanchor': 'center',
+        'yanchor': 'top',
+        'font': dict(size=20, color=TABLE_THEME["text_color"])})
 
-    table.write_image("exported_image_table.png",
-                      scale=2, width=750, height=len(dependent_vars)*77)
+    if '.' not in file_name:
+        file_name += ".png"
+    table.write_image(get_file_to_export_path(file_name, "table"),
+                      scale=2, width=750, height=385)
 
 
 def add_br_suffix(value: any):
@@ -95,7 +88,7 @@ def add_br_suffix(value: any):
 def main():
     """ Main method to be run if this file is ran.
     """
-    create_table("Analyzing", ["EXPENSES", "Q1", "Q2", "Q3", "Q4"], [
+    create_table("ex", "Analyzing", ["EXPENSES", "Q1", "Q2", "Q3", "Q4"], [
                  "Salaries", "Office", "Merchandise", "Legal", "TOTAL"],
                  [[120000, 20000, 80000, 2000, 12120000],
                  [1300000, 20000, 70000, 2000, 130902000],
