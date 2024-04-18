@@ -4,8 +4,10 @@
 
 
 """
+import numpy as np
 import plotly.graph_objects as go
-from directory_finder import get_file_to_export_path
+from visualization.tables.directory_finder import get_file_to_export_path
+
 TABLE_THEME = {
     "light_row_color": "#EAEAF1",
     "dark_row_color": "#dedeea",
@@ -16,9 +18,9 @@ TABLE_THEME = {
 
 
 def create_table(file_name: str, table_title: str,
-                 independent_vars: list,
-                 dependent_vars: list,
-                 values: list[list],
+                 independent_vars: list, dependent_vars: list,
+                 values: list[list], height=380,
+                 width=750, title_y=0.8, title_x=0.5
                  ):
     """ Creates a table with the given parameters.
 
@@ -28,10 +30,10 @@ def create_table(file_name: str, table_title: str,
         dependent_vars (list): The dependent variables (left) of the table.
         values (list[list]): The values to be displayed in the body of table.
     """
-
-    values_list = [add_br_suffix(dependent_vars)]
-    for value in values:
-        values_list.append(add_br_suffix(value))
+    values_list = clean_values(values, len(independent_vars))
+    for i, value in enumerate(values_list):
+        values_list[i] = add_br_suffix(value)
+    values_list.insert(0, add_br_suffix(dependent_vars))
     table = go.Figure(data=[go.Table(
         header=dict(
             values=[f"<b>{var}<b>" for var in independent_vars],
@@ -54,8 +56,8 @@ def create_table(file_name: str, table_title: str,
 
     table.update_layout(title={
         'text': f"<b>{table_title}<b>",
-        'y': 0.8,
-        'x': 0.5,
+        'y': title_y,
+        'x': title_x,
         'xanchor': 'center',
         'yanchor': 'top',
         'font': dict(size=20, color=TABLE_THEME["text_color"])})
@@ -63,19 +65,43 @@ def create_table(file_name: str, table_title: str,
     if '.' not in file_name:
         file_name += ".png"
     table.write_image(get_file_to_export_path(file_name, "table"),
-                      scale=2, width=750, height=385)
+                      scale=2, width=width, height=height)
+
+
+def clean_values(values: list[list], len_independent_vars: int):
+    """ Formats the 2D array to be displayed in the table.
+
+    Args:
+        values (list[list]): The values to be displayed in the table.
+        len_independent_vars (int): The number of independent variables (number of cells in the 
+                                    table header, if you will).
+
+    Returns:
+        list[list]: 2D array of values, now properly formatted, to be displayed in the table.
+    """
+    cleaned_values = []
+    for i in range(0, len(values), len_independent_vars - 1):
+        temp_arr = []
+        for j in range(i, i+len_independent_vars - 1):
+            temp_arr.append(values[j][0])
+        cleaned_values.append(temp_arr)
+
+    cleaned_values = np.rot90(np.array(cleaned_values))
+    cleaned_values = np.flip(cleaned_values, axis=0).tolist()
+
+    return cleaned_values
 
 
 def add_br_suffix(value: any):
-    """ Adds an HTML line break `<br>` to the end of `value`. If `value` is a list, a line break 
+    """ Adds an HTML line break `<br>` to the end of `value`. If `value` is a list, a line break
         is added to each element.
 
     Args:
-        `value` (any):  The `value` to add a line break to. If `value` is a list, the line break is 
+        `value` (any):  The `value` to add a line break to. If `value` is a list, the line break is
                         added to each element.
 
     Returns:
-        `str`:  `value` with a line break `<br>` at the end. If `value` is a list, a line break is 
+        `str`:  `value` with a line break `<br>` at the end. If `value` is a list, a line break is
                 added to the end of each element.
     """
     if isinstance(value, list):
