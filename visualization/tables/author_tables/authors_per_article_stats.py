@@ -12,14 +12,9 @@ from scipy import stats
 class AuthorsPerArticleStats:
     """ Contains functions to get statistics about the number of authors per article. 
 
-    "Mean", "Median", "Mode",
-    "Var", "Range", "IQR",
-    "Skew", "Kurtosis"
-
-
-    Attributes:
-        database (`dict`):  The database containing the articles.
-        authors_per_article (`list`):   A list containing the number of authors per article.
+        "Mean", "Median", "Mode",
+        "Var", "Range", "IQR",
+        "Skew", "Kurtosis"
         """
 
     def __init__(self, database):
