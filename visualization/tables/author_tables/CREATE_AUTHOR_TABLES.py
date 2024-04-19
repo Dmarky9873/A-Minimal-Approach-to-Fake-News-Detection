@@ -44,6 +44,8 @@ def create_average_authors_per_articles_table():
     variances = authors_per_article_stats.variance()
     ranges = authors_per_article_stats.range()
     iqrs = authors_per_article_stats.iqr()
+    skews = authors_per_article_stats.skew()
+    kurtosis = authors_per_article_stats.kurtosis()
 
     independent_vars = ["", "Authors/Article",
                         "Authors/Fake", "Authors/Real"]
@@ -74,8 +76,15 @@ def create_average_authors_per_articles_table():
         # IQR
         [int(iqrs["iqr-authors-per-article"])],
         [int(iqrs["iqr-authors-per-fake-article"])],
-        [int(iqrs["iqr-authors-per-real-article"])]
-        # TODO: Impliment skew and kurtosis
+        [int(iqrs["iqr-authors-per-real-article"])],
+        # Skew
+        [round(skews["skew-authors-per-article"], DECIMALS_TO_ROUND)],
+        [round(skews["skew-authors-per-fake-article"], DECIMALS_TO_ROUND)],
+        [round(skews["skew-authors-per-real-article"], DECIMALS_TO_ROUND)],
+        # Kurtosis
+        [round(kurtosis["kurtosis-authors-per-article"], DECIMALS_TO_ROUND)],
+        [round(kurtosis["kurtosis-authors-per-fake-article"], DECIMALS_TO_ROUND)],
+        [round(kurtosis["kurtosis-authors-per-real-article"], DECIMALS_TO_ROUND)]
     ]
 
     create_table(os.path.join("authors", "authors_per_article_basic_statistics.png"),

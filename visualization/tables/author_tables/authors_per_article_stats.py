@@ -6,6 +6,7 @@
 """
 
 import statistics
+from scipy import stats
 
 
 class AuthorsPerArticleStats:
@@ -19,14 +20,6 @@ class AuthorsPerArticleStats:
     Attributes:
         database (`dict`):  The database containing the articles.
         authors_per_article (`list`):   A list containing the number of authors per article.
-
-    Methods:
-        mean:   Returns the average number of authors per article, the average number of authors per 
-                fake article, and the average number of authors per real article.
-
-        median: Returns the median number of authors per article, the median number of authors per 
-                fake article, and the median number of authors per real article.
-
         """
 
     def __init__(self, database):
@@ -35,16 +28,15 @@ class AuthorsPerArticleStats:
         Args:
             database (`dict`):  The database containing the articles.
         """
-        self.database = database
         self.authors_per_article = []
         self.authors_per_fake_article = []
         self.authors_per_real_article = []
 
-        for authors in self.database["articles"]["fake-articles"]["authors"]:
+        for authors in database["articles"]["fake-articles"]["authors"]:
             self.authors_per_article.append(len(authors))
             self.authors_per_fake_article.append(len(authors))
 
-        for authors in self.database["articles"]["real-articles"]["authors"]:
+        for authors in database["articles"]["real-articles"]["authors"]:
             self.authors_per_article.append(len(authors))
             self.authors_per_real_article.append(len(authors))
 
@@ -150,4 +142,23 @@ class AuthorsPerArticleStats:
         Returns:
             `dict`: A dictionary containing the skewness values outlined above.
         """
-        # TODO: Implement the skew function
+
+        return {
+            "skew-authors-per-article": stats.skew(self.authors_per_article),
+            "skew-authors-per-fake-article": stats.skew(self.authors_per_fake_article),
+            "skew-authors-per-real-article": stats.skew(self.authors_per_real_article)
+        }
+
+    def kurtosis(self):
+        """ Returns the kurtosis of the number of authors per article, the kurtosis of the number of 
+            authors per fake article, and the kurtosis of the number of authors per real article.
+
+        Returns:
+            `dict`: A dictionary containing the kurtosis values outlined above.
+        """
+
+        return {
+            "kurtosis-authors-per-article": stats.kurtosis(self.authors_per_article),
+            "kurtosis-authors-per-fake-article": stats.kurtosis(self.authors_per_fake_article),
+            "kurtosis-authors-per-real-article": stats.kurtosis(self.authors_per_real_article)
+        }
