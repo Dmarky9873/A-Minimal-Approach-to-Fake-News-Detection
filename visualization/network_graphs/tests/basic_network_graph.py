@@ -8,7 +8,7 @@
 
 import random as r
 import networkx as nx
-from visualization.display_network_graph import display_network_graph
+from visualization.network_graphs.tests.display_network_graph import display_network_graph
 
 
 def main():

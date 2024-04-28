@@ -7,9 +7,9 @@
 """
 
 import os
-from authors_per_article_stats import AuthorsPerArticleStats
-from articles_per_author_stats import ArticlesPerAuthorStats
-from author_counts import get_author_counts
+from visualization.tables.author_tables.generate_stats.authors_per_article_stats import AuthorsPerArticleStats
+from visualization.tables.author_tables.generate_stats.articles_per_author_stats import ArticlesPerAuthorStats
+from visualization.tables.author_tables.generate_stats.author_counts import get_author_counts
 from visualization.get_json_dict import DATABASE
 from visualization.tables.create_table import create_table
 from definitions import DECIMALS_TO_ROUND
@@ -157,6 +157,8 @@ def main():
     """ Function to be ran when the file is executed.
     """
     create_average_articles_per_author_table()
+    create_average_authors_per_articles_table()
+    create_authors_counts_table()
 
 
 if __name__ == "__main__":
