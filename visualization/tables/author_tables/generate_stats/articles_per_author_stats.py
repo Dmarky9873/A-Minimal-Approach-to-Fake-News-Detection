@@ -7,33 +7,7 @@
 
 import statistics
 from scipy import stats
-
-
-def get_authors(database):
-    """ Returns all authors in the database, authors who publish both fake and real articles,
-        authors who exclusively publish fake articles, and authors who exclusively publish real
-        articles.
-
-        Returns:
-            `dict`: A dictionary containing values outlined above.
-        """
-    fake_authors = set()
-    real_authors = set()
-
-    for author in database["articles"]["fake-articles"]["authors"]:
-        fake_authors.update(author)
-    for author in database["articles"]["real-articles"]["authors"]:
-        real_authors.update(author)
-
-    authors_who_publish_both = fake_authors.intersection(real_authors)
-    authors = fake_authors.union(real_authors)
-    exclusively_fake_authors = fake_authors.difference(real_authors)
-    exclusively_real_authors = real_authors.difference(fake_authors)
-
-    return {"every-author": authors,
-            "authors-who-publish-both": authors_who_publish_both,
-            "exclusively-fake-authors": exclusively_fake_authors,
-            "exclusively-real-authors": exclusively_real_authors}
+from visualization.utils import get_authors
 
 
 class ArticlesPerAuthorStats:

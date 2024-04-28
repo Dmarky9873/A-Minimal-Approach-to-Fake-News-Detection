@@ -7,8 +7,10 @@
 """
 
 import os
-from visualization.tables.author_tables.generate_stats.authors_per_article_stats import AuthorsPerArticleStats
-from visualization.tables.author_tables.generate_stats.articles_per_author_stats import ArticlesPerAuthorStats
+from visualization.tables.author_tables.generate_stats.authors_per_article_stats import \
+    AuthorsPerArticleStats
+from visualization.tables.author_tables.generate_stats.articles_per_author_stats import \
+    ArticlesPerAuthorStats
 from visualization.tables.author_tables.generate_stats.author_counts import get_author_counts
 from visualization.get_json_dict import DATABASE
 from visualization.tables.create_table import create_table
@@ -33,7 +35,7 @@ def create_authors_counts_table():
                  independent_vars, dependent_vars, values)
 
 
-def create_average_authors_per_articles_table():
+def create_authors_per_articles_table():
     """ Generates a table with the average number of authors per article, the average number of
         authors per fake article, and average number of authors per real article.
     """
@@ -93,7 +95,7 @@ def create_average_authors_per_articles_table():
                  height=500, title_y=0.85)
 
 
-def create_average_articles_per_author_table():
+def create_articles_per_author_table():
     """ Generates a table with the average number of authors per article, the average number of
         authors per fake article, and average number of authors per real article.
     """
@@ -156,8 +158,8 @@ def create_average_articles_per_author_table():
 def main():
     """ Function to be ran when the file is executed.
     """
-    create_average_articles_per_author_table()
-    create_average_authors_per_articles_table()
+    create_articles_per_author_table()
+    create_authors_per_articles_table()
     create_authors_counts_table()
 
 
