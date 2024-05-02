@@ -6,8 +6,9 @@
 
 """
 
-from get_proportion_fake_per_share import get_proportion_fake_per_share
-from visualization.two_dimensional_charts.scatterplots.create_scatterplot import create_scatterplot
+from visualization.scatterplots.p_fake_vs_shares.generate_stats.get_proportion_fake_per_share \
+    import get_proportion_fake_per_share
+from visualization.scatterplots.create_scatterplot import create_scatterplot
 
 
 def create_scatterplot_p_fake_vs_shares():
