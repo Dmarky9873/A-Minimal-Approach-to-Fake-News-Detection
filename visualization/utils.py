@@ -1,3 +1,10 @@
+"""
+
+    Author: Daniel Markusson
+
+"""
+
+
 def get_all_article_ids(database):
     """ Get all article ids from the database.
 

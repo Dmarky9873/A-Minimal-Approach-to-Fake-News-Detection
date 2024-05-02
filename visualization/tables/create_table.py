@@ -6,7 +6,7 @@
 """
 import numpy as np
 import plotly.graph_objects as go
-from visualization.tables.directory_finder import get_file_to_export_path
+from visualization.directory_finder import get_file_to_export_path
 
 TABLE_THEME = {
     "light_row_color": "#EAEAF1",
