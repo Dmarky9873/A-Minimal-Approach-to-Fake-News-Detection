@@ -12,10 +12,6 @@ import pandas as pd
 from visualization.directory_finder import get_file_to_export_path
 
 
-# class Scatterplot:
-#     pass
-
-
 def create_scatterplot(points: list[tuple[int, int]], x_label: str, y_label: str, title: str, file_name: str):
     """ Creates a scatterplot of `points`.
 
