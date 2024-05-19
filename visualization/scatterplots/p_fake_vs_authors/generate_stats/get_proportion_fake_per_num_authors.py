@@ -31,7 +31,7 @@ def get_num_fake_real_per_num_authors(interval_size):
             article_index = DATABASE["articles"]["real-articles"]["ids"].index(
                 uid)
             authors = len(DATABASE["articles"]
-                          ["real-articles"]["authors"][article_index])
+                          ["real-articles"]["authors"][article_index])//interval_size
 
         try:
             authors_dict[authors]

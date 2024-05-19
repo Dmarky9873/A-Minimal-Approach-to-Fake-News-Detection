@@ -47,9 +47,6 @@ def get_num_fake_real_per_share(interval_size):
 
         del shares_dict[shares]
 
-    shares_dict[float("inf")] = {'fake': too_small_fake_accum,
-                                 'real': too_small_real_accum}
-
     return shares_dict
 
 
