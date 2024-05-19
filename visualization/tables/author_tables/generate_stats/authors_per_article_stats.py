@@ -13,7 +13,7 @@ class AuthorsPerArticleStats:
     """ Contains functions to get statistics about the number of authors per article. 
 
         "Mean", "Median", "Mode",
-        "Var", "Range", "IQR",
+        "Stdev", "Range", "IQR",
         "Skew", "Kurtosis"
         """
 
@@ -71,7 +71,7 @@ class AuthorsPerArticleStats:
                 "mode-authors-per-fake-article": statistics.mode(self.authors_per_fake_article),
                 "mode-authors-per-real-article": statistics.mode(self.authors_per_real_article)}
 
-    def variance(self):
+    def stdev(self):
         """ Returns the variance of the number of authors per article, the variance of the number of 
             authors per fake article, and the variance of the number of authors per real article.
 
@@ -79,13 +79,13 @@ class AuthorsPerArticleStats:
             `dict`: A dictionary containing the variance values outlined above.
         """
 
-        return {"variance-authors-per-article": statistics.variance(
+        return {"stdev-authors-per-article": statistics.stdev(
             self.authors_per_article
         ),
-            "variance-authors-per-fake-article": statistics.variance(
+            "stdev-authors-per-fake-article": statistics.stdev(
             self.authors_per_fake_article
         ),
-            "variance-authors-per-real-article": statistics.variance(
+            "stdev-authors-per-real-article": statistics.stdev(
                 self.authors_per_real_article
         )}
 

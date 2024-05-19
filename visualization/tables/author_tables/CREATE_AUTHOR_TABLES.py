@@ -44,7 +44,7 @@ def create_authors_per_articles_table():
     means = authors_per_article_stats.mean()
     medians = authors_per_article_stats.median()
     modes = authors_per_article_stats.mode()
-    variances = authors_per_article_stats.variance()
+    stdevs = authors_per_article_stats.stdev()
     ranges = authors_per_article_stats.range()
     iqrs = authors_per_article_stats.iqr()
     skews = authors_per_article_stats.skew()
@@ -53,7 +53,7 @@ def create_authors_per_articles_table():
     independent_vars = ["", "Authors/Article",
                         "Authors/Fake", "Authors/Real"]
     dependent_vars = ["Mean", "Median", "Mode",
-                      "Var", "Range", "IQR",
+                      "Stdev", "Range", "IQR",
                       "Skew", "Kurtosis"]
     values = [
         # Means
@@ -68,10 +68,10 @@ def create_authors_per_articles_table():
         [int(modes["mode-authors-per-article"])],
         [int(modes["mode-authors-per-fake-article"])],
         [int(modes["mode-authors-per-real-article"])],
-        # Variances
-        [round(variances["variance-authors-per-article"], DECIMALS_TO_ROUND)],
-        [round(variances["variance-authors-per-fake-article"], DECIMALS_TO_ROUND)],
-        [round(variances["variance-authors-per-real-article"], DECIMALS_TO_ROUND)],
+        # Stdevs
+        [round(stdevs["stdev-authors-per-article"], DECIMALS_TO_ROUND)],
+        [round(stdevs["stdev-authors-per-fake-article"], DECIMALS_TO_ROUND)],
+        [round(stdevs["stdev-authors-per-real-article"], DECIMALS_TO_ROUND)],
         # Ranges
         [int(ranges["range-authors-per-article"])],
         [int(ranges["range-authors-per-fake-article"])],
@@ -104,7 +104,7 @@ def create_articles_per_author_table():
     means = articles_per_author_stats.mean()
     medians = articles_per_author_stats.median()
     modes = articles_per_author_stats.mode()
-    variances = articles_per_author_stats.variance()
+    stdevs = articles_per_author_stats.stdev()
     ranges = articles_per_author_stats.range()
     iqrs = articles_per_author_stats.iqr()
     skews = articles_per_author_stats.skew()
@@ -113,7 +113,7 @@ def create_articles_per_author_table():
     independent_vars = ["", "Articles/Author",
                         "Articles/Fake", "Articles/Real"]
     dependent_vars = ["Mean", "Median", "Mode",
-                      "Var", "Range", "IQR",
+                      "Stdev", "Range", "IQR",
                       "Skew", "Kurtosis"]
     values = [
         # Means
@@ -129,9 +129,9 @@ def create_articles_per_author_table():
         [int(modes["mode-articles-per-fake-author"])],
         [int(modes["mode-articles-per-real-author"])],
         # Variances
-        [round(variances["variance-articles-per-author"], DECIMALS_TO_ROUND)],
-        [round(variances["variance-articles-per-fake-author"], DECIMALS_TO_ROUND)],
-        [round(variances["variance-articles-per-real-author"], DECIMALS_TO_ROUND)],
+        [round(stdevs["stdev-articles-per-author"], DECIMALS_TO_ROUND)],
+        [round(stdevs["stdev-articles-per-fake-author"], DECIMALS_TO_ROUND)],
+        [round(stdevs["stdev-articles-per-real-author"], DECIMALS_TO_ROUND)],
         # Ranges
         [int(ranges["range-articles-per-author"])],
         [int(ranges["range-articles-per-fake-author"])],
