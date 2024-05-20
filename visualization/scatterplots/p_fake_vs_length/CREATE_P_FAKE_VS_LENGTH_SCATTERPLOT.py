@@ -15,7 +15,7 @@ def create_scatterplot_p_fake_vs_length():
     """ Create a scatterplot of the proportion of fake articles per share interval. """
     p_fake_per_length = get_proportion_fake_per_lengths()
     create_scatterplot(p_fake_per_length,
-                       'Length', 'Proportion Fake',
+                       'Length (in Characters)', 'Proportion Fake',
                        "Proportion of Fake Articles at Different Article Lengths",
                        "p_fake_vs_lengths.png")
 

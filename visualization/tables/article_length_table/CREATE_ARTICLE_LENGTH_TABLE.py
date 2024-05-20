@@ -8,14 +8,14 @@ import os
 from visualization.tables.create_table import create_table
 from visualization.tables.article_length_table.generate_stats.get_article_length_summary_stats \
     import LengthOfArticleStats
-from visualization.get_json_dict import database
+from visualization.get_json_dict import DATABASE
 from definitions import DECIMALS_TO_ROUND
 
 
 def create_length_of_articles_table():
     """ Generates a table with basic statistics about the number of shares per article.
     """
-    length_of_article_stats = LengthOfArticleStats(database)
+    length_of_article_stats = LengthOfArticleStats(DATABASE)
     means = length_of_article_stats.mean()
     medians = length_of_article_stats.median()
     modes = length_of_article_stats.mode()
