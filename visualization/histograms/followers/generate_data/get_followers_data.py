@@ -33,15 +33,18 @@ def get_followers_lists():
     for user in user_dist['all-users']:
         num_followers = DATABASE['users']['counts'][user]['followers']['count']
         if user in user_dist['fake-users']:
-            if not (num_followers < LOWER_OUTLIER_LESS_THAN_FAKE or num_followers > UPPER_OUTLIER_GREATER_THAN_FAKE):
+            if not (num_followers < LOWER_OUTLIER_LESS_THAN_FAKE or num_followers >
+                    UPPER_OUTLIER_GREATER_THAN_FAKE):
                 labels.append('Fake')
                 followers.append(num_followers)
         elif user in user_dist['real-users']:
-            if not (num_followers < LOWER_OUTLIER_LESS_THAN_REAL or num_followers > UPPER_OUTLIER_GREATER_THAN_REAL):
+            if not (num_followers < LOWER_OUTLIER_LESS_THAN_REAL or num_followers >
+                    UPPER_OUTLIER_GREATER_THAN_REAL):
                 labels.append('Real')
                 followers.append(num_followers)
         else:
-            if not (num_followers < LOWER_OUTLIER_LESS_THAN_ALL or num_followers > UPPER_OUTLIER_GREATER_THAN_ALL):
+            if not (num_followers < LOWER_OUTLIER_LESS_THAN_ALL or num_followers >
+                    UPPER_OUTLIER_GREATER_THAN_ALL):
                 labels.append('Both/Neither')
                 followers.append(num_followers)
     return followers, labels
