@@ -6,7 +6,7 @@
 """
 
 from visualization.utils import is_article_fake, get_all_article_ids
-from visualization.get_json_dict import DATABASE
+from visualization.get_json_dict import database
 
 
 def get_num_authors_lists():
@@ -21,17 +21,17 @@ def get_num_authors_lists():
     fake_articles = []
     real_articles = []
 
-    for uid in get_all_article_ids(DATABASE):
+    for uid in get_all_article_ids(database):
         if is_article_fake(uid):
-            article_index = DATABASE["articles"]["fake-articles"]["ids"].index(
+            article_index = database["articles"]["fake-articles"]["ids"].index(
                 uid)
-            authors = len(DATABASE["articles"]
+            authors = len(database["articles"]
                           ["fake-articles"]["authors"][article_index])
             fake_articles.append(authors)
         else:
-            article_index = DATABASE["articles"]["real-articles"]["ids"].index(
+            article_index = database["articles"]["real-articles"]["ids"].index(
                 uid)
-            authors = len(DATABASE["articles"]
+            authors = len(database["articles"]
                           ["real-articles"]["authors"][article_index])
             real_articles.append(authors)
         all_articles.append(authors)

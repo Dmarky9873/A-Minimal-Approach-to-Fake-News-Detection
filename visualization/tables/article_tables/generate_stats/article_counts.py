@@ -4,7 +4,7 @@
 
 
 """
-from visualization.get_json_dict import DATABASE
+from visualization.get_json_dict import database
 
 
 def get_article_counts():
@@ -14,8 +14,8 @@ def get_article_counts():
     Returns:
         `dict`: A dictionary with the number of articles, fake articles, and real articles.
     """
-    num_fake_articles = len(DATABASE["articles"]["fake-articles"]["ids"])
-    num_real_articles = len(DATABASE["articles"]["real-articles"]["ids"])
+    num_fake_articles = len(database["articles"]["fake-articles"]["ids"])
+    num_real_articles = len(database["articles"]["real-articles"]["ids"])
     num_articles = num_fake_articles + num_real_articles
     return {"num-articles": num_articles,
             "num-fake-articles": num_fake_articles,

@@ -1,0 +1,1 @@
+* A large sharer is a user who has shared more than x̄ + 2Sₓ, where x̄ is the sample mean number of shares per user and Sₓ is the sample standard deviation of the number of shares per user.

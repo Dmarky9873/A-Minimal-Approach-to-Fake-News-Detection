@@ -3,7 +3,7 @@
     Author: Daniel Markusson
 
 """
-from visualization.get_json_dict import DATABASE
+from visualization.get_json_dict import database
 
 
 def get_author_counts():
@@ -18,9 +18,9 @@ def get_author_counts():
     fake_authors = set()
     real_authors = set()
 
-    for author in DATABASE["articles"]["fake-articles"]["authors"]:
+    for author in database["articles"]["fake-articles"]["authors"]:
         fake_authors.update(author)
-    for author in DATABASE["articles"]["real-articles"]["authors"]:
+    for author in database["articles"]["real-articles"]["authors"]:
         real_authors.update(author)
 
     authors_who_publish_both = fake_authors.intersection(real_authors)

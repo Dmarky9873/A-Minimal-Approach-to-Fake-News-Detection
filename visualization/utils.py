@@ -21,6 +21,30 @@ def get_all_article_ids(database):
         yield uid
 
 
+def get_user_distribution(database):
+    """ Get the distribution of users in the database.
+
+    Returns:
+        `dict`: A dictionary containing the distribution of users.
+    """
+    all_users = set()
+    only_fake_users = set()
+    only_real_users = set()
+
+    users = database['users']['counts'].keys()
+
+    for user in users:
+        all_users.add(user)
+        if (database['users']['counts'][user]['articles']['num-fake-shared'] == 0) and \
+                (database['users']['counts'][user]['articles']['num-real-shared'] >= 1):
+            only_real_users.add(user)
+        elif (database['users']['counts'][user]['articles']['num-real-shared'] == 0) and \
+                (database['users']['counts'][user]['articles']['num-fake-shared'] >= 1):
+            only_fake_users.add(user)
+
+    return {'all-users': all_users, 'fake-users': only_fake_users, 'real-users': only_real_users}
+
+
 def get_authors(database):
     """ Returns all authors in the database, authors who publish both fake and real articles,
         authors who exclusively publish fake articles, and authors who exclusively publish real

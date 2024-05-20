@@ -12,7 +12,7 @@ from visualization.tables.author_tables.generate_stats.authors_per_article_stats
 from visualization.tables.author_tables.generate_stats.articles_per_author_stats import \
     ArticlesPerAuthorStats
 from visualization.tables.author_tables.generate_stats.author_counts import get_author_counts
-from visualization.get_json_dict import DATABASE
+from visualization.get_json_dict import database
 from visualization.tables.create_table import create_table
 from definitions import DECIMALS_TO_ROUND
 
@@ -40,7 +40,7 @@ def create_authors_per_articles_table():
         authors per fake article, and average number of authors per real article.
     """
 
-    authors_per_article_stats = AuthorsPerArticleStats(DATABASE)
+    authors_per_article_stats = AuthorsPerArticleStats(database)
     means = authors_per_article_stats.mean()
     medians = authors_per_article_stats.median()
     modes = authors_per_article_stats.mode()
@@ -100,7 +100,7 @@ def create_articles_per_author_table():
         authors per fake article, and average number of authors per real article.
     """
 
-    articles_per_author_stats = ArticlesPerAuthorStats(DATABASE)
+    articles_per_author_stats = ArticlesPerAuthorStats(database)
     means = articles_per_author_stats.mean()
     medians = articles_per_author_stats.median()
     modes = articles_per_author_stats.mode()

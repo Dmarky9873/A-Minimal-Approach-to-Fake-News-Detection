@@ -6,7 +6,7 @@
 """
 
 from visualization.utils import is_article_fake, get_all_article_ids
-from visualization.get_json_dict import DATABASE
+from visualization.get_json_dict import database
 
 
 def get_shares_lists():
@@ -25,8 +25,8 @@ def get_shares_lists():
     fake_shares_list = []
     real_shares_list = []
 
-    for uid in get_all_article_ids(DATABASE):
-        shares = DATABASE["articles"]["counts"][uid]["shares"]
+    for uid in get_all_article_ids(database):
+        shares = database["articles"]["counts"][uid]["shares"]
         shares_list.append(shares)
 
         if is_article_fake(uid):

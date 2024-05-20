@@ -4,7 +4,7 @@
 
 """
 
-from visualization.get_json_dict import DATABASE
+from visualization.get_json_dict import database
 
 
 def get_length_articles_lists():
@@ -20,12 +20,12 @@ def get_length_articles_lists():
     lengths_of_fakes = []
     lengths_of_reals = []
 
-    for body, title in zip(DATABASE["articles"]["fake-articles"]["bodies"],
-                           DATABASE["articles"]["fake-articles"]["titles"]):
+    for body, title in zip(database["articles"]["fake-articles"]["bodies"],
+                           database["articles"]["fake-articles"]["titles"]):
         lengths_of_fakes.append(len(body) + len(title))
         lengths_of_articles.append(len(body) + len(title))
-    for body, title in zip(DATABASE["articles"]["real-articles"]["bodies"],
-                           DATABASE["articles"]["real-articles"]["titles"]):
+    for body, title in zip(database["articles"]["real-articles"]["bodies"],
+                           database["articles"]["real-articles"]["titles"]):
         lengths_of_reals.append(len(body) + len(title))
         lengths_of_articles.append(len(body) + len(title))
 
