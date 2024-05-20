@@ -77,10 +77,27 @@ def __get_ecdfs_directory():
     raise FileNotFoundError
 
 
+def __get_histograms_directory():
+    """ Returns the path to the scatterplots directory.
+
+    Returns:
+        str: The path to the scatterplots directory.
+    """
+    location = os.path.join(ROOT_DIR, "visualization",
+                            "exports", "histograms")
+    if os.path.exists(location):
+        return location
+    CONSOLE.print(
+        f"""The directory [file]graphs[/file] does not exist. Please create it in [file]{
+            location}[/file]""", style="alert")
+    raise FileNotFoundError
+
+
 GRAPHS_DIRECTORY = __get_graphs_directory()
 TABLES_DIRECTORY = __get_tables_directory()
 SCATTERPLOTS_DIRECTORY = __get_scatterplots_directory()
 ECDFS_DIRECTORY = __get_ecdfs_directory()
+HISTOGRAMS_DIRECTORY = __get_histograms_directory()
 
 
 def get_file_to_export_path(file_name: str, file_type: str):
@@ -102,9 +119,11 @@ def get_file_to_export_path(file_name: str, file_type: str):
             path = os.path.join(SCATTERPLOTS_DIRECTORY, file_name)
         case "ecdfs":
             path = os.path.join(ECDFS_DIRECTORY, file_name)
+        case "histograms":
+            path = os.path.join(HISTOGRAMS_DIRECTORY, file_name)
         case _:
             raise ValueError(
-                "Invalid arg `file_type`. `file_type` must be 'graph', 'table', 'ecdfs', or 'scatterplot'.")
+                "Invalid arg `file_type`. `file_type` must be 'graph', 'table', 'ecdfs', 'histograms' or 'scatterplot'.")
 
     if not '.' in file_name:
         CONSOLE.print(

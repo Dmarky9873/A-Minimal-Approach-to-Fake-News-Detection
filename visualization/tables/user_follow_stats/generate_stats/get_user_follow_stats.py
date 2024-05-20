@@ -237,6 +237,11 @@ class FollowStats:
         Returns:
             `dict`: A dictionary containing the IQR values outlined above.
         """
+        print(statistics.quantiles(self.all_users_followers, n=4)[2], "Q3 all")
+        print(statistics.quantiles(
+            self.fake_users_followers, n=4)[2], "Q3 fake")
+        print(statistics.quantiles(
+            self.real_users_followers, n=4)[2], "Q3 real")
         return {
             # Followers per all users
             "iqr-followers-per-user": statistics.quantiles(self.all_users_followers, n=4)[2] -
