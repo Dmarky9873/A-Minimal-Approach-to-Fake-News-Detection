@@ -27,6 +27,12 @@ UPPER_OUTLIER_GREATER_THAN_REAL = Q3_REAL + 1.5 * IQR_REAL
 
 
 def get_followers_lists():
+    """ Gets the number of followers for all users and labels them as fake, real or both/neither.
+
+    Returns:
+        tuple[list[int], list[str]]:    The tuple of lists containing the number of followers and
+                                        the label of each user.
+    """
     user_dist = get_user_distribution(DATABASE)
     followers = []
     labels = []
