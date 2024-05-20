@@ -15,21 +15,6 @@ from definitions import ROOT_DIR, THEME
 CONSOLE = Console(theme=THEME)
 
 
-def __get_graphs_directory():
-    """ Returns the path to the graphs directory.
-
-    Returns:
-        str: The path to the graphs directory.
-    """
-    location = os.path.join(ROOT_DIR, "visualization", "exports", "graphs")
-    if os.path.exists(location):
-        return location
-    CONSOLE.print(
-        f"""The directory [file]graphs[/file] does not exist. Please create it in [file]{
-            location}[/file]""", style="alert")
-    raise FileNotFoundError
-
-
 def __get_tables_directory():
     """ Returns the path to the tables directory.
 
@@ -93,7 +78,6 @@ def __get_histograms_directory():
     raise FileNotFoundError
 
 
-GRAPHS_DIRECTORY = __get_graphs_directory()
 TABLES_DIRECTORY = __get_tables_directory()
 SCATTERPLOTS_DIRECTORY = __get_scatterplots_directory()
 ECDFS_DIRECTORY = __get_ecdfs_directory()
@@ -111,8 +95,6 @@ def get_file_to_export_path(file_name: str, file_type: str):
         str: The path to the file to be exported.
     """
     match file_type:
-        case "graph":
-            path = os.path.join(GRAPHS_DIRECTORY, file_name)
         case "table":
             path = os.path.join(TABLES_DIRECTORY, file_name)
         case "scatterplot":
@@ -123,7 +105,7 @@ def get_file_to_export_path(file_name: str, file_type: str):
             path = os.path.join(HISTOGRAMS_DIRECTORY, file_name)
         case _:
             raise ValueError(
-                "Invalid arg `file_type`. `file_type` must be 'graph', 'table', 'ecdfs', 'histograms' or 'scatterplot'.")
+                "Invalid arg `file_type`. `file_type` must be 'table', 'ecdfs', 'histograms' or 'scatterplot'.")
 
     if not '.' in file_name:
         CONSOLE.print(
