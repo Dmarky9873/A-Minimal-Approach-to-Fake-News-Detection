@@ -32,7 +32,7 @@ def create_single_ecdf(points: list[int], data_label: str, title: str, file_name
     plt.savefig(get_file_to_export_path(file_name, "ecdfs"))
 
 
-def create_comparitive_ecdf(points_to_plot: list[int], labels: list[str], column_labels: list[str], to_compare: str, to_plot: str, title: str, file_name: str, log_scale=True):
+def create_comparitive_ecdf(points_to_plot: list[int], labels: list[str], column_labels: list[str], to_compare: str, to_plot: str, title: str, file_name: str, xlabel=None, log_scale=True):
     """ Provided with a list of datapoints, `points_to_plot`, and labels for each datapoint, 
         `labels`, this function will create an ECDF plot comparing datapoints for each categorical 
         label.
@@ -46,6 +46,9 @@ def create_comparitive_ecdf(points_to_plot: list[int], labels: list[str], column
         title (str): The title of the plot.
         file_name (str): The name of the file to be saved.
     """
+    if xlabel is None:
+        xlabel = to_plot
+
     sns.set_theme()
 
     cleaned_data = []
@@ -61,14 +64,14 @@ def create_comparitive_ecdf(points_to_plot: list[int], labels: list[str], column
             hue=to_compare,
             log_scale=True,
             hue_order=["Fake", "Real"],
-        ).set(title=title, ylabel="ECDF")
+        ).set(title=title, ylabel="ECDF", xlabel=xlabel)
     else:
         sns.ecdfplot(
             data=data,
             x=to_plot,
             hue=to_compare,
             hue_order=["Fake", "Real"],
-        ).set(title=title, ylabel="ECDF")
+        ).set(title=title, ylabel="ECDF", xlabel=xlabel)
 
     plt.savefig(get_file_to_export_path(file_name, "ecdfs"))
 
@@ -78,7 +81,7 @@ def main():
 
     create_comparitive_ecdf([1, 1, 2, 3, 2], ['fake', 'fake', 'fake', 'real', 'real'], [
                             'num_authors', 'is_fake_real'], 'is_fake_real', 'num_authors', "Hello",
-                            'hello.png', log_scale=True)
+                            'hello.png', True, "hello")
 
 
 if __name__ == '__main__':

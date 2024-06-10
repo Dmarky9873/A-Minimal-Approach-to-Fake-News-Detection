@@ -29,7 +29,7 @@ def create_p_fake_vs_shares_ecdf():
     create_comparitive_ecdf(combined_list, labels, ["Shares", "Type of Article"], "Type of Article",
                             "Shares",
                             "Number of Shares vs. Type of Article",
-                            "p_shares_vs_type_of_article.png")
+                            "p_shares_vs_type_of_article.png", xlabel="Number of Shares Received")
 
 
 def main():
