@@ -15,13 +15,10 @@ def create_p_fake_vs_shares_ecdf():
         Creates the ECDF of the probability to receive a certain number of shares based on the type
         of article.
     """
-    shares_list, fake_shares_list, real_shares_list = get_shares_lists()
+    fake_shares_list, real_shares_list = get_shares_lists()
 
     combined_list = []
     labels = []
-    for shares in shares_list:
-        combined_list.append(shares)
-        labels.append("Combined")
     for shares in fake_shares_list:
         combined_list.append(shares)
         labels.append("Fake")
@@ -31,7 +28,7 @@ def create_p_fake_vs_shares_ecdf():
 
     create_comparitive_ecdf(combined_list, labels, ["Shares", "Type of Article"], "Type of Article",
                             "Shares",
-                            "Proportion of an Amount of Shares Depending on the Type of Article",
+                            "Number of Shares vs. Type of Article",
                             "p_shares_vs_type_of_article.png")
 
 

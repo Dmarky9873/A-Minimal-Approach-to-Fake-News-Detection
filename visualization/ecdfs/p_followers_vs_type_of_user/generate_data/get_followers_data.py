@@ -14,13 +14,12 @@ def get_followers_lists():
     labels = []
     for user in user_dist['all-users']:
         num_followers = DATABASE['users']['counts'][user]['followers']['count']
-        followers.append(num_followers)
         if user in user_dist['fake-users']:
             labels.append('Fake')
+            followers.append(num_followers)
         elif user in user_dist['real-users']:
             labels.append('Real')
-        else:
-            labels.append('Both/Neither')
+            followers.append(num_followers)
     return followers, labels
 
 

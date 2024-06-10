@@ -15,13 +15,10 @@ def create_p_fake_vs_num_authors_ecdf():
         Creates the ECDF of the probability to have a certain number of authors based on the type
         of article.
     """
-    all_articles, fake_articles, real_articles = get_num_authors_lists()
+    fake_articles, real_articles = get_num_authors_lists()
 
     combined_list = []
     labels = []
-    for num_authors in all_articles:
-        combined_list.append(num_authors)
-        labels.append("Combined")
     for num_authors in fake_articles:
         combined_list.append(num_authors)
         labels.append("Fake")
@@ -32,8 +29,8 @@ def create_p_fake_vs_num_authors_ecdf():
     create_comparitive_ecdf(combined_list, labels, ["Number of Authors", "Type of Article"],
                             "Type of Article",
                             "Number of Authors",
-                            "Proportion of with Different Numbers of Authors Depending on the Type of Article",
-                            "p_num_authors_vs_type_of_article.png")
+                            "Number of Authors vs. Type of Article",
+                            "p_num_authors_vs_type_of_article.png", False)
 
 
 def main():

@@ -17,7 +17,7 @@ def create_followers_ecdf():
     create_comparitive_ecdf(
         followers, labels, ["Number of Followers", "Is Fake/Real"],
         "Is Fake/Real", "Number of Followers",
-        "Histogram of Number of Followers Compared Across the Types of Users",
+        "Number of Followers vs. Type of User",
         "p_followers_vs_type_of_user_ecdf.png")
 
 

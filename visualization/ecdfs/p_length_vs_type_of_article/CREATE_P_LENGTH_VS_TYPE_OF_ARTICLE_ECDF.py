@@ -15,13 +15,10 @@ def create_p_fake_vs_length_ecdf():
         Creates the ECDF of the probability to have a certain number of authors based on the type
         of article.
     """
-    all_articles, fake_articles, real_articles = get_length_articles_lists()
+    fake_articles, real_articles = get_length_articles_lists()
 
     combined_list = []
     labels = []
-    for num_authors in all_articles:
-        combined_list.append(num_authors)
-        labels.append("Combined")
     for num_authors in fake_articles:
         combined_list.append(num_authors)
         labels.append("Fake")
@@ -33,7 +30,7 @@ def create_p_fake_vs_length_ecdf():
                                                     "Type of Article"],
                             "Type of Article",
                             "Length of Article (in Characters)",
-                            "Proportion of Articles with Different Lengths Depending on Type of Article",
+                            "Length of Article vs. Type of Article",
                             "p_length_vs_type_of_article.png")
 
 
