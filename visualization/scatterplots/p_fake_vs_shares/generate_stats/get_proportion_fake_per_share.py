@@ -7,7 +7,7 @@
 """
 
 from visualization.utils import is_article_fake, get_all_article_ids
-from visualization.get_json_dict import database
+from visualization.get_json_dict import DATABASE
 
 SMALL_LIMIT = 3
 INTERVAL_SIZE = 50
@@ -21,8 +21,8 @@ def get_num_fake_real_per_share(interval_size):
     """
     shares_dict = {}
 
-    for uid in get_all_article_ids(database):
-        shares = database["articles"]["counts"][uid]["shares"]//interval_size
+    for uid in get_all_article_ids(DATABASE):
+        shares = DATABASE["articles"]["counts"][uid]["shares"]//interval_size
 
         try:
             shares_dict[shares]

@@ -7,7 +7,7 @@
 """
 
 from visualization.utils import is_article_fake, get_all_article_ids
-from visualization.get_json_dict import database
+from visualization.get_json_dict import DATABASE
 
 SMALL_LIMIT = 1
 INTERVAL_SIZE = 1
@@ -21,16 +21,16 @@ def get_num_fake_real_per_num_authors(interval_size):
     """
     authors_dict = {}
 
-    for uid in get_all_article_ids(database):
+    for uid in get_all_article_ids(DATABASE):
         if is_article_fake(uid):
-            article_index = database["articles"]["fake-articles"]["ids"].index(
+            article_index = DATABASE["articles"]["fake-articles"]["ids"].index(
                 uid)
-            authors = len(database["articles"]
+            authors = len(DATABASE["articles"]
                           ["fake-articles"]["authors"][article_index])//interval_size
         else:
-            article_index = database["articles"]["real-articles"]["ids"].index(
+            article_index = DATABASE["articles"]["real-articles"]["ids"].index(
                 uid)
-            authors = len(database["articles"]
+            authors = len(DATABASE["articles"]
                           ["real-articles"]["authors"][article_index])//interval_size
 
         try:
