@@ -3,11 +3,11 @@
     Author: Daniel Markusson
 
 """
-from visualization.get_json_dict import database
+from visualization.get_json_dict import DATABASE
 
 
 def get_author_counts():
-    """ Returns the number of authors in the database, the number of authors who publish both fake
+    """ Returns the number of authors in the DATABASE, the number of authors who publish both fake
         and real articles, the number of authors who exclusively publish fake articles, and the
         number of authors who exclusively publish real articles.
 
@@ -18,9 +18,9 @@ def get_author_counts():
     fake_authors = set()
     real_authors = set()
 
-    for author in database["articles"]["fake-articles"]["authors"]:
+    for author in DATABASE["articles"]["fake-articles"]["authors"]:
         fake_authors.update(author)
-    for author in database["articles"]["real-articles"]["authors"]:
+    for author in DATABASE["articles"]["real-articles"]["authors"]:
         real_authors.update(author)
 
     authors_who_publish_both = fake_authors.intersection(real_authors)

@@ -27,13 +27,11 @@ def get_fake_real_dataframes():
         "BuzzFeed_fake_news_content.csv")).fillna("None")
     buzzfeed_dataframe_real = pd.read_csv(get_raw_file_location(
         "BuzzFeed_real_news_content.csv")).fillna("None")
-    politifact_dataframe_fake = pd.read_csv(get_raw_file_location(
-        "PolitiFact_fake_news_content.csv")).fillna("None")
     politifact_dataframe_real = pd.read_csv(get_raw_file_location(
         "PolitiFact_real_news_content.csv")).fillna("None")
 
     real_dataframes = [buzzfeed_dataframe_real, politifact_dataframe_real]
-    fake_dataframes = [buzzfeed_dataframe_fake, politifact_dataframe_fake]
+    fake_dataframes = [buzzfeed_dataframe_fake]
 
     return real_dataframes, fake_dataframes
 
@@ -153,12 +151,12 @@ def get_clean_dataframes():
             new_id = get_article_name(num, outlet, False)
             k.id = new_id
 
-        for _, k in fake_dataframes[i].iterrows():
-            old_id = k.id
-            num = int(old_id[old_id.index('_') + 1:old_id.index('-')]) + 1
-            outlet = "buzzfeed" if i == 0 else "politifact"
-            new_id = get_article_name(num, outlet, True)
-            k.id = new_id
+    for _, k in fake_dataframes[0].iterrows():
+        old_id = k.id
+        num = int(old_id[old_id.index('_') + 1:old_id.index('-')]) + 1
+        outlet = "buzzfeed" if i == 0 else "politifact"
+        new_id = get_article_name(num, outlet, True)
+        k.id = new_id
 
     return real_dataframes, fake_dataframes
 
