@@ -61,7 +61,7 @@ class ArticlesPerAuthorStats:
         Returns:
             `dict`: A dictionary containing the mean values outlined above.
         """
-
+        print(self.articles_per_real_author)
         return {"mean-articles-per-author": statistics.mean(self.articles_per_author),
                 "mean-articles-per-fake-author": statistics.mean(self.articles_per_fake_author),
                 "mean-articles-per-real-author": statistics.mean(self.articles_per_real_author)}

@@ -102,6 +102,7 @@ def create_articles_per_author_table():
 
     articles_per_author_stats = ArticlesPerAuthorStats(DATABASE)
     means = articles_per_author_stats.mean()
+    print(means)
     medians = articles_per_author_stats.median()
     modes = articles_per_author_stats.mode()
     stdevs = articles_per_author_stats.stdev()
