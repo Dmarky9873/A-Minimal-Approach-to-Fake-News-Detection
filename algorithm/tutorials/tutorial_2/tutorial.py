@@ -7,11 +7,11 @@
 import xgboost as xgb
 import seaborn as sns
 import numpy as np
-from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
 
 diamonds = sns.load_dataset("diamonds")
+print(diamonds.head())
 
 X, y = diamonds.drop('price', axis=1), diamonds[['price']]
 
@@ -52,11 +52,4 @@ results = xgb.cv(
 
 best_rmse = results['test-rmse-mean'].min()
 
-y_pred = model.predict(X_test)
-predictions = [round(value) for value in y_pred]
-
-# Evaluate predictions
-accuracy = accuracy_score(y_test, predictions)
-print("Accuracy: %.2f%%" % (accuracy * 100.0))
-
-print(best_rmse, "Best RMSE")
+print(best_rmse)

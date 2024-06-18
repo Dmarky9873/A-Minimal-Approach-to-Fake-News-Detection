@@ -32,7 +32,7 @@ def create_single_ecdf(points: list[int], data_label: str, title: str, file_name
     plt.savefig(get_file_to_export_path(file_name, "ecdfs"))
 
 
-def create_comparitive_ecdf(points_to_plot: list[int], labels: list[str], column_labels: list[str], to_compare: str, to_plot: str, title: str, file_name: str, xlabel=None, log_scale=True):
+def create_comparitive_ecdf(points_to_plot: list[any], labels: list[str], column_labels: list[str], to_compare: str, to_plot: str, title: str, file_name: str, xlabel=None, log_scale=True):
     """ Provided with a list of datapoints, `points_to_plot`, and labels for each datapoint, 
         `labels`, this function will create an ECDF plot comparing datapoints for each categorical 
         label.
