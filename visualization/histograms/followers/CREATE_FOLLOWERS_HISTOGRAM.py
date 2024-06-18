@@ -16,7 +16,7 @@ def create_followers_histogram():
     create_comparitive_histogram(
         followers, labels, ["Number of Followers", "Is Fake/Real"],
         "Is Fake/Real", "Number of Followers",
-        "Histogram of Number of Followers Compared Across the Types of Users",
+        "Followers Across Fake and Real Users",
         "followers_histogram.png")
 
 

@@ -56,7 +56,8 @@ def create_comparitive_histogram(points_to_plot: list[int], labels: list[str], c
         data=data,
         x=to_plot,
         hue=to_compare,
-        element="step"
+        element="step",
+        log_scale=True
     ).set(title=title)
 
     plt.savefig(get_file_to_export_path(file_name, "histograms"))

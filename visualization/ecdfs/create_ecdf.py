@@ -49,7 +49,9 @@ def create_comparitive_ecdf(points_to_plot: list[int], labels: list[str], column
     if xlabel is None:
         xlabel = to_plot
 
-    sns.set_theme()
+    sns.set_theme(rc={
+        'figure.figsize': (6.5, 6.5)
+    })
 
     cleaned_data = []
     for point, label in zip(points_to_plot, labels):
