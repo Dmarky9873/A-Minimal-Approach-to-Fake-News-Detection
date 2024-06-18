@@ -7,7 +7,7 @@
 """
 
 import linecache
-from articles import ARTICLES_DICT, is_article_fake, BUZZFEED_NAMES_DIR, POLITIFACT_NAMES_DIR
+from articles import ARTICLES_DICT, is_article_fake, BUZZFEED_NAMES_DIR
 from article_user_relationship import user_article_shares
 from users import get_username, get_users, FOLLOW_RELATIONSHIPS
 from file_retrieval import get_raw_file_location
@@ -31,8 +31,6 @@ def get_article_counts():
     stats = dict()
     buzzfeed_stats = user_article_shares(
         get_raw_file_location("BuzzFeedNewsUser.txt"))
-    politifact_stats = user_article_shares(
-        get_raw_file_location("PolitiFactNewsUser.txt"))
 
     error_articles = set()
 
@@ -50,16 +48,6 @@ def get_article_counts():
             stats[name]["shares"] += int(stat[2].replace('\n', ''))
             stats[name]["users-who-shared"].add(
                 get_username(int(stat[1]), 'buzzfeed'))
-        except KeyError:
-            error_articles.add(name)
-
-    for stat in track(politifact_stats, description="tabulating politifact sharing counts..."):
-        name = linecache.getline(
-            POLITIFACT_NAMES_DIR, int(stat[0])).replace('\n', '')
-        try:
-            stats[name]["shares"] += int(stat[2])
-            stats[name]["users-who-shared"].add(
-                get_username(int(stat[1]), 'politifact'))
         except KeyError:
             error_articles.add(name)
 

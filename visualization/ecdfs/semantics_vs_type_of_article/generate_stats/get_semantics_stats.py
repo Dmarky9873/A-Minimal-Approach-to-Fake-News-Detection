@@ -43,9 +43,13 @@ def preprocess_text(text):
     return processed_text
 
 
-def get_semantic_analysis():
-
+def get_semantic_score(text: str):
     analyzer = SentimentIntensityAnalyzer()
+
+    return analyzer.polarity_scores(preprocess_text(text))['compound']
+
+
+def get_semantic_analysis():
 
     labels = []
     scores = []
@@ -57,7 +61,7 @@ def get_semantic_analysis():
             DATABASE['articles']['fake-articles']['bodies'][i]
         ])
 
-        score = analyzer.polarity_scores(preprocess_text(text))['compound']
+        score = get_semantic_score(text)
 
         scores.append(score)
 
@@ -68,7 +72,7 @@ def get_semantic_analysis():
             DATABASE['articles']['real-articles']['bodies'][i]
         ])
 
-        score = analyzer.polarity_scores(preprocess_text(text))['compound']
+        score = get_semantic_score(text)
 
         scores.append(score)
 
