@@ -17,8 +17,6 @@ def create_semantics_ecdf():
     """
     labels, scores = get_semantic_analysis()
 
-    print(scores)
-
     create_comparitive_ecdf(scores, labels, ["Semantics", "Type of Article"], "Type of Article",
                             "Semantics",
                             "Textual Semantics vs. Type of Article",
