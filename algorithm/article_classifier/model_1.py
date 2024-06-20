@@ -1,28 +1,27 @@
 """
 
-
-Author: Daniel Markusson
-
+    Author: Daniel Markusson
 
 """
 
+import pandas as pd
 import xgboost as xgb
 from sklearn.model_selection import train_test_split
-from algorithm.article_classifier.dataframe_creator import get_dataframe
 
-articles = get_dataframe()
+articles = pd.read_csv('./algorithm/article_classifier/training_set.csv')
 
 
 X, y = articles.drop('is-fake', axis=1), articles[['is-fake']]
 
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, random_state=1, test_size=0.25)
+    X, y, random_state=1, test_size=0.33)
 
-dtrain_reg = xgb.DMatrix(X_train, y_train, enable_categorical=True)
-dtest_reg = xgb.DMatrix(X_test, y_test, enable_categorical=True)
+dtrain_reg = xgb.DMatrix(X_train, y_train)
+dtest_reg = xgb.DMatrix(X_test, y_test)
 
 
-params = {"objective": "reg:squarederror", "tree_method": "hist"}
+params = {"objective": "reg:squaredlogerror",
+          "tree_method": "exact", "eval_metric": "error", "max_depth": 5}
 evals = [(dtrain_reg, "train"), (dtest_reg, "validation")]
 
 n = 10000
@@ -33,14 +32,21 @@ model = xgb.train(
     num_boost_round=n,
     evals=evals,
     verbose_eval=10,
-    early_stopping_rounds=20,
+    early_stopping_rounds=50,
 )
 
 
 results = xgb.cv(
-    params, dtrain_reg, num_boost_round=n, nfold=5, early_stopping_rounds=20
+    params, dtrain_reg, num_boost_round=n, nfold=5, early_stopping_rounds=50, verbose_eval=10
 )
 
-best_rmse = results['test-rmse-mean'].min()
 
-print(best_rmse)
+best_error = results['test-error-mean'].min()
+
+print("Cross Validation min error:", best_error)
+
+# x = pd.DataFrame(
+#     data=[[21658, 47, 10, 0.8624]], columns=['length', 'shares', 'num_authors', 'sentiment-score'])
+
+
+# print(model.predict(xgb.DMatrix(x)))

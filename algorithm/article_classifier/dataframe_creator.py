@@ -77,7 +77,7 @@ def get_dataframe():
 def main():
     df = get_dataframe()
 
-    print(df.head())
+    df.to_csv("./algorithm/article_classifier/training_set.csv", index=False)
 
 
 if __name__ == "__main__":
