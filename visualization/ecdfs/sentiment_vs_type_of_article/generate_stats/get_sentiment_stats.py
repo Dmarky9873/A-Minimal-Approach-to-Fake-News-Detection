@@ -43,7 +43,7 @@ def preprocess_text(text):
     return processed_text
 
 
-def get_semantic_score(text: str):
+def get_sentiment_score(text: str):
     """ Get the sentiment score of the given text.
 
     Args:
@@ -58,7 +58,12 @@ def get_semantic_score(text: str):
     return analyzer.polarity_scores(preprocess_text(text))['compound']
 
 
-def get_semantic_analysis():
+def get_sentiment_analysis():
+    """ Get the sentiment analysis of the articles in the DATABASE.
+
+    Returns:
+        tuple: A tuple containing the labels and scores of the articles.
+    """
 
     labels = []
     scores = []
@@ -70,7 +75,7 @@ def get_semantic_analysis():
             DATABASE['articles']['fake-articles']['bodies'][i]
         ])
 
-        score = get_semantic_score(text)
+        score = get_sentiment_score(text)
 
         scores.append(score)
 
@@ -81,7 +86,7 @@ def get_semantic_analysis():
             DATABASE['articles']['real-articles']['bodies'][i]
         ])
 
-        score = get_semantic_score(text)
+        score = get_sentiment_score(text)
 
         scores.append(score)
 
@@ -89,7 +94,7 @@ def get_semantic_analysis():
 
 
 def main():
-    get_semantic_analysis()
+    get_sentiment_analysis()
 
 
 if __name__ == "__main__":

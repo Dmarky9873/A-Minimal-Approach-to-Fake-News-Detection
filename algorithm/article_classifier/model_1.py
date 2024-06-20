@@ -15,7 +15,8 @@ articles = get_dataframe()
 
 X, y = articles.drop('is-fake', axis=1), articles[['is-fake']]
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, random_state=1, test_size=0.25)
 
 dtrain_reg = xgb.DMatrix(X_train, y_train, enable_categorical=True)
 dtest_reg = xgb.DMatrix(X_test, y_test, enable_categorical=True)
@@ -33,7 +34,6 @@ model = xgb.train(
     evals=evals,
     verbose_eval=10,
     early_stopping_rounds=20,
-
 )
 
 

@@ -7,8 +7,8 @@
 
 import pandas as pd
 from algorithm.get_json_dict import DATABASE
-from visualization.ecdfs.semantics_vs_type_of_article.generate_stats.get_semantics_stats import \
-    get_semantic_score
+from visualization.ecdfs.sentiment_vs_type_of_article.generate_stats.get_sentiment_stats import \
+    get_sentiment_score
 
 
 def get_dataframe():
@@ -19,7 +19,7 @@ def get_dataframe():
         `Pandas Dataframe`: The dataframe containing the data.
     """
     column_labels = ['length', 'shares',
-                     'num_authors', 'semantic-score', 'is-fake']
+                     'num_authors', 'sentiment-score', 'is-fake']
 
     data = []
 
@@ -41,7 +41,7 @@ def get_dataframe():
         num_authors = len(fake_authors[i])
 
         text = ' '.join([fake_bodies[i], fake_titles[i]])
-        sentement_score = get_semantic_score(text)
+        sentement_score = get_sentiment_score(text)
 
         curr_article_data.append(length)
         curr_article_data.append(counts[article_id]['shares'])
@@ -59,7 +59,7 @@ def get_dataframe():
         num_authors = len(real_authors[i])
 
         text = ' '.join([real_bodies[i], real_titles[i]])
-        sentement_score = get_semantic_score(text)
+        sentement_score = get_sentiment_score(text)
 
         curr_article_data.append(length)
         curr_article_data.append(counts[article_id]['shares'])
