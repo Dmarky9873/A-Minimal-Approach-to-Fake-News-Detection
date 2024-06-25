@@ -73,6 +73,7 @@ def create_comparitive_ecdf(points_to_plot: list[any], labels: list[str], column
             x=to_plot,
             hue=to_compare,
             hue_order=["Fake", "Real"],
+            log_scale=False,
         ).set(title=title, ylabel="ECDF", xlabel=xlabel)
 
     plt.savefig(get_file_to_export_path(file_name, "ecdfs"))

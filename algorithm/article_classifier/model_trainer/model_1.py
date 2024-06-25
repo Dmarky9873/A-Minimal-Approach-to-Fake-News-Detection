@@ -8,7 +8,8 @@ import pandas as pd
 import xgboost as xgb
 from sklearn.model_selection import train_test_split
 
-articles = pd.read_csv('./algorithm/article_classifier/training_set.csv')
+articles = pd.read_csv(
+    './algorithm/article_classifier/model_trainer/training_set.csv')
 
 
 X, y = articles.drop('is-fake', axis=1), articles[['is-fake']]
@@ -45,8 +46,10 @@ best_error = results['test-error-mean'].min()
 
 print("Cross Validation min error:", best_error)
 
-# x = pd.DataFrame(
-#     data=[[21658, 47, 10, 0.8624]], columns=['length', 'shares', 'num_authors', 'sentiment-score'])
+x = pd.DataFrame(
+    data=[[21658, 47, 10, 0.8624]], columns=['length', 'shares', 'num_authors', 'sentiment-score'])
 
 
-# print(model.predict(xgb.DMatrix(x)))
+print(model.predict(xgb.DMatrix(x)))
+
+model.save_model('./algorithm/article_classifier/model.ubj')
