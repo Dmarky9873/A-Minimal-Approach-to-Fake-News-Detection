@@ -52,6 +52,10 @@ def create_comparitive_histogram(points_to_plot: list[int], labels: list[str], c
     for point, label in zip(points_to_plot, labels):
         cleaned_data.append((point, label))
     data = pd.DataFrame(cleaned_data, columns=column_labels)
+
+    sns.set_theme(rc={
+        'figure.figsize': (6.5, 6.5)
+    })
     sns.histplot(
         data=data,
         x=to_plot,

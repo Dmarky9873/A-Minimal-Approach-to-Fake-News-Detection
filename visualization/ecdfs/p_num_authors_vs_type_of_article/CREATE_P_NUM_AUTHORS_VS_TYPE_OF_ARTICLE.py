@@ -30,7 +30,7 @@ def create_p_fake_vs_num_authors_ecdf():
                             "Type of Article",
                             "Number of Authors",
                             "Number of Authors vs. Type of Article",
-                            "p_num_authors_vs_type_of_article.png", False)
+                            "p_num_authors_vs_type_of_article.png")
 
 
 def main():
