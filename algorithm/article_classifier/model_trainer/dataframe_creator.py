@@ -9,6 +9,10 @@ import pandas as pd
 from algorithm.get_json_dict import DATABASE
 from visualization.ecdfs.sentiment_vs_type_of_article.generate_stats.get_sentiment_stats import \
     get_sentiment_score
+import numpy as np
+from readability import Readability
+from readability.text import Analyzer
+from rich.progress import track
 
 
 def get_dataframe():
@@ -19,7 +23,7 @@ def get_dataframe():
         `Pandas Dataframe`: The dataframe containing the data.
     """
     column_labels = ['length', 'shares',
-                     'num_authors', 'sentiment-score', 'is-fake']
+                     'num_authors', 'sentiment-score', 'readability-score', 'is-fake']
 
     data = []
 
@@ -33,7 +37,7 @@ def get_dataframe():
 
     counts = DATABASE['articles']['counts']
 
-    for i, article_id in enumerate(DATABASE['articles']['fake-articles']['ids']):
+    for i, article_id in track(enumerate(DATABASE['articles']['fake-articles']['ids'])):
         curr_article_data = []
 
         length = len(fake_titles[i]) + len(fake_bodies[i])
@@ -41,17 +45,26 @@ def get_dataframe():
         num_authors = len(fake_authors[i])
 
         text = ' '.join([fake_bodies[i], fake_titles[i]])
+        a = Analyzer()
+        if a.analyze(text).stats["num_words"] >= 100:
+            r = Readability(text)
+
+            readability_score = r.dale_chall().score
+        else:
+            readability_score = np.nan
+
         sentement_score = get_sentiment_score(text)
 
         curr_article_data.append(length)
         curr_article_data.append(counts[article_id]['shares'])
         curr_article_data.append(num_authors)
         curr_article_data.append(sentement_score)
+        curr_article_data.append(readability_score)
         curr_article_data.append(1)
 
         data.append(curr_article_data)
 
-    for i, article_id in enumerate(DATABASE['articles']['real-articles']['ids']):
+    for i, article_id in track(enumerate(DATABASE['articles']['real-articles']['ids'])):
         curr_article_data = []
 
         length = len(real_titles[i]) + len(real_bodies[i])
@@ -59,12 +72,20 @@ def get_dataframe():
         num_authors = len(real_authors[i])
 
         text = ' '.join([real_bodies[i], real_titles[i]])
+        a = Analyzer()
+        if a.analyze(text).stats["num_words"] >= 100:
+            r = Readability(text)
+            readability_score = r.dale_chall().score
+        else:
+            readability_score = np.nan
+
         sentement_score = get_sentiment_score(text)
 
         curr_article_data.append(length)
         curr_article_data.append(counts[article_id]['shares'])
         curr_article_data.append(num_authors)
         curr_article_data.append(sentement_score)
+        curr_article_data.append(readability_score)
         curr_article_data.append(0)
 
         data.append(curr_article_data)

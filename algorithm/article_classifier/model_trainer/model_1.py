@@ -7,6 +7,10 @@
 import pandas as pd
 import xgboost as xgb
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import roc_curve
+from sklearn.metrics import roc_auc_score
+import matplotlib.pyplot as plt
+from sklearn.metrics import accuracy_score
 
 articles = pd.read_csv(
     './algorithm/article_classifier/model_trainer/training_set.csv')
@@ -21,11 +25,11 @@ dtrain_reg = xgb.DMatrix(X_train, y_train)
 dtest_reg = xgb.DMatrix(X_test, y_test)
 
 
-params = {"objective": "reg:squaredlogerror",
-          "tree_method": "exact", "eval_metric": "error", "max_depth": 5}
+params = {"objective": "binary:logistic",
+          "tree_method": "exact", "max_depth": 5}
 evals = [(dtrain_reg, "train"), (dtest_reg, "validation")]
 
-n = 10000
+n = 500
 
 model = xgb.train(
     params=params,
@@ -42,14 +46,33 @@ results = xgb.cv(
 )
 
 
-best_error = results['test-error-mean'].min()
+mean_logloss = results['test-logloss-mean'].mean()
 
-print("Cross Validation min error:", best_error)
+print("Cross Validation mean logloss:", mean_logloss)
 
-x = pd.DataFrame(
-    data=[[21658, 47, 10, 0.8624]], columns=['length', 'shares', 'num_authors', 'sentiment-score'])
+print("Accuracy:", accuracy_score(y_test, model.predict(dtest_reg).round()))
 
-
-print(model.predict(xgb.DMatrix(x)))
 
 model.save_model('./algorithm/article_classifier/model.ubj')
+
+ns_probs = [0 for _ in range(len(y_test))]
+
+lr_probs = model.predict(dtest_reg)
+
+ns_auc = roc_auc_score(y_test, ns_probs)
+lr_auc = roc_auc_score(y_test, lr_probs)
+
+print('No Skill: ROC AUC=%.3f' % (ns_auc))
+print('Logistic: ROC AUC=%.3f' % (lr_auc))
+
+ns_fpr, ns_tpr, _ = roc_curve(y_test, ns_probs)
+lr_fpr, lr_tpr, _ = roc_curve(y_test, lr_probs)
+
+plt.plot(ns_fpr, ns_tpr, linestyle='--', label='No Skill')
+plt.plot(lr_fpr, lr_tpr, marker='.', label='Logistic')
+
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+
+plt.legend()
+plt.show()

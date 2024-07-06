@@ -94,7 +94,9 @@ def get_sentiment_analysis():
 
 
 def main():
-    get_sentiment_analysis()
+    # get_sentiment_analysis()
+    print(get_sentiment_score(
+        "Conservative Icon Ted Nugent Killed In Hunting Accident – Americas Last Line of Defense"))
 
 
 if __name__ == "__main__":
