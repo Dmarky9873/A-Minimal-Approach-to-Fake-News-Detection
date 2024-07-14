@@ -10,7 +10,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import roc_curve
 from sklearn.metrics import roc_auc_score
 import matplotlib.pyplot as plt
+from sklearn import metrics
 from sklearn.metrics import accuracy_score
+
 
 articles = pd.read_csv(
     './algorithm/article_classifier/model_trainer/training_set.csv')
@@ -75,4 +77,18 @@ plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
 
 plt.legend()
+plt.show()
+
+# Confusion matrix
+actual = dtest_reg.get_label()
+predicted = model.predict(dtest_reg).round()
+print(actual)
+print(predicted)
+
+confusion_matrix = metrics.confusion_matrix(actual, predicted)
+
+cm_display = metrics.ConfusionMatrixDisplay(
+    confusion_matrix=confusion_matrix, display_labels=[0, 1])
+
+cm_display.plot()
 plt.show()
