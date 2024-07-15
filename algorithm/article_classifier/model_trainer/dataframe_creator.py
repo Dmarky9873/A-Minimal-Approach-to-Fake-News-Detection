@@ -16,7 +16,7 @@ from rich.progress import track
 
 
 def get_dataframe():
-    """ Create a dataframe from the data in the DATABASE to be interpreted by a machine learning 
+    """ Create a dataframe from the data in the DATABASE to be interpreted by a machine learning
         model.
 
     Returns:
@@ -37,7 +37,7 @@ def get_dataframe():
 
     counts = DATABASE['articles']['counts']
 
-    for i, article_id in track(enumerate(DATABASE['articles']['fake-articles']['ids'])):
+    for i, article_id in track(enumerate(DATABASE['articles']['fake-articles']['ids']), description="Creating fake article data"):
         curr_article_data = []
 
         length = len(fake_titles[i]) + len(fake_bodies[i])
@@ -53,18 +53,18 @@ def get_dataframe():
         else:
             readability_score = np.nan
 
-        sentement_score = get_sentiment_score(text)
+        sentiment_score = get_sentiment_score(text)
 
         curr_article_data.append(length)
         curr_article_data.append(counts[article_id]['shares'])
         curr_article_data.append(num_authors)
-        curr_article_data.append(sentement_score)
+        curr_article_data.append(sentiment_score)
         curr_article_data.append(readability_score)
         curr_article_data.append(1)
 
         data.append(curr_article_data)
 
-    for i, article_id in track(enumerate(DATABASE['articles']['real-articles']['ids'])):
+    for i, article_id in track(enumerate(DATABASE['articles']['real-articles']['ids']), description="Creating real article data"):
         curr_article_data = []
 
         length = len(real_titles[i]) + len(real_bodies[i])
@@ -79,12 +79,12 @@ def get_dataframe():
         else:
             readability_score = np.nan
 
-        sentement_score = get_sentiment_score(text)
+        sentiment_score = get_sentiment_score(text)
 
         curr_article_data.append(length)
         curr_article_data.append(counts[article_id]['shares'])
         curr_article_data.append(num_authors)
-        curr_article_data.append(sentement_score)
+        curr_article_data.append(sentiment_score)
         curr_article_data.append(readability_score)
         curr_article_data.append(0)
 

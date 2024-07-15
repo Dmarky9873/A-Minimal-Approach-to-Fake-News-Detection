@@ -37,12 +37,15 @@ def intro():
             sentiment_score = float(input())
             CONSOLE.print("[info]Enter the length of the article: [/info]")
             length = int(input())
-            predict(model, shares, num_authors, sentiment_score, length)
+            CONSOLE.print("[info]Enter the readability score: [/info]")
+            readability = float(input())
+            predict(model, shares, num_authors,
+                    sentiment_score, length, readability)
         elif selection.lower() == "q":
             sys.exit(0)
 
 
-def predict(model: xgb.XGBClassifier, shares: int, num_authors: int, sentiment_score: float, length: int):
+def predict(model: xgb.XGBClassifier, shares: int, num_authors: int, sentiment_score: float, length: int, readability: float):
     """ Predicts if an article is fake or real
 
     Args:
@@ -52,9 +55,9 @@ def predict(model: xgb.XGBClassifier, shares: int, num_authors: int, sentiment_s
         sentiment_score (float): The sentiment score of the article
         length (int): The length of the article
     """
-    data = [[length, shares, num_authors, sentiment_score]]
+    data = [[length, shares, num_authors, sentiment_score, readability]]
     columns = [
-        'length', 'shares', 'num_authors', 'sentiment-score'
+        'length', 'shares', 'num_authors', 'sentiment-score', 'readability-score'
     ]
 
     to_predict_df = pd.DataFrame(data=data, columns=columns)
